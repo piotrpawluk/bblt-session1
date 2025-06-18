@@ -1,0 +1,127 @@
+server:
+  port: 8911  # As per user instructions to avoid conflicts
+
+spring:
+  application:
+    name: bblt-session1-demo
+  profiles:
+    active: dev
+
+# Spring AI Configuration
+spring.ai:
+  bedrock:
+    aws:
+      region: ${AWS_REGION:us-east-1}
+      access-key: ${AWS_ACCESS_KEY_ID:}
+      secret-key: ${AWS_SECRET_ACCESS_KEY:}
+  vertex:
+    ai:
+      gemini:
+        project-id: ${GOOGLE_VERTEX_PROJECT:drfirst-peerson-playground}
+        location: ${GOOGLE_VERTEX_LOCATION:us-central1}
+        chat:
+          options:
+            model: ${GOOGLE_VERTEX_MODEL_ID:gemini-2.5-flash-preview-05-20}
+            temperature: 0.7
+            max-output-tokens: 8192
+            top-p: 0.4
+
+# Model Configuration
+bedrock:
+  models:
+    claude-3-sonnet:
+      model-id: anthropic.claude-3-sonnet-20240229-v1:0
+      cost-per-1k-input-tokens: 0.003
+      cost-per-1k-output-tokens: 0.015
+
+    claude-3-5-sonnet:
+      model-id: anthropic.claude-3-5-sonnet-20240620-v1:0
+      cost-per-1k-input-tokens: 0.003
+      cost-per-1k-output-tokens: 0.015
+
+    llama2-70b:
+      model-id: meta.llama2-70b-chat-v1
+      cost-per-1k-input-tokens: 0.00195
+      cost-per-1k-output-tokens: 0.00256
+
+    titan-express:
+      model-id: amazon.titan-text-express-v1
+      cost-per-1k-input-tokens: 0.0002
+      cost-per-1k-output-tokens: 0.0006
+
+    gemini-2-5-flash:
+      model-id: gemini-2.5-flash-preview-05-20
+      cost-per-1k-input-tokens: 0.000075
+      cost-per-1k-output-tokens: 0.0003
+
+# Logging Configuration
+logging:
+  level:
+    com.drfirst.bblt.session1: INFO
+    org.springframework.ai: INFO
+    software.amazon.awssdk: WARN
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# Actuator Configuration for monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# SpringDoc OpenAPI Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  show-actuator: true
+
+# Application Info
+info:
+  app:
+    name: ${spring.application.name}
+    version: '@project.version@'
+    description: AWS Bedrock Spring AI Demo for Week 1 Presentation
+    week: 1
+    topics:
+      - AWS Bedrock setup and authentication
+      - Multiple foundation models (Claude, Llama, Titan)
+      - Prompt engineering techniques
+      - Model comparison and benchmarking
+      - Streaming responses
+      - CLI tool for homework
+
+---
+# Development Profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+logging:
+  level:
+    com.drfirst.bblt.session1: DEBUG
+    root: INFO
+
+---
+# Production Profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+logging:
+  level:
+    com.drfirst.bblt.session1: INFO
+    root: WARN
+
+server:
+  error:
+    include-stacktrace: never

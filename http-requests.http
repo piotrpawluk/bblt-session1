@@ -1,0 +1,247 @@
+### AWS Bedrock Spring AI Demo - HTTP Requests
+### Week 1 Presentation Examples
+
+### Variables
+@baseUrl = http://localhost:8911
+@model = claude-3-sonnet
+
+### Health Check
+GET {{baseUrl}}/api/chat/health
+
+### Get Available Models
+GET {{baseUrl}}/api/chat/models
+
+### Get Model Information
+GET {{baseUrl}}/api/chat/models/{{model}}/info
+
+### Basic Chat Completion
+POST {{baseUrl}}/api/chat/completion
+Content-Type: application/json
+
+{
+  "message": "Explain quantum computing in simple terms",
+  "modelId": "claude-3-sonnet",
+  "temperature": 0.7,
+  "maxTokens": 1000
+}
+
+### Chat with Metrics
+POST {{baseUrl}}/api/chat/completion/detailed
+Content-Type: application/json
+
+{
+  "message": "Write a haiku about artificial intelligence",
+  "modelId": "claude-3-sonnet",
+  "temperature": 0.8,
+  "maxTokens": 500,
+  "includeMetrics": true
+}
+
+### Chat with System Prompt
+POST {{baseUrl}}/api/chat/completion/system
+Content-Type: application/x-www-form-urlencoded
+
+message=What is the capital of France?&systemPrompt=You are a helpful geography teacher. Always provide additional context about the places you mention.&modelId=claude-3-sonnet&temperature=0.3
+
+### Streaming Chat (works with curl)
+### curl -N -X POST "http://localhost:8911/api/chat/completion/stream" -H "Content-Type: application/json" -d '{"message": "Tell me a story about a brave knight", "modelId": "claude-3-sonnet"}'
+
+### Compare Multiple Models
+POST {{baseUrl}}/api/models/compare
+Content-Type: application/x-www-form-urlencoded
+
+message=Write a haiku about spring flowers&modelIds=claude-3-sonnet,claude-3-5-sonnet,llama2-70b
+
+### Model Benchmark
+POST {{baseUrl}}/api/models/benchmark
+Content-Type: application/x-www-form-urlencoded
+
+modelIds=claude-3-sonnet,claude-3-5-sonnet
+
+### Performance Summary
+GET {{baseUrl}}/api/models/performance/summary
+
+### ========================================
+### PROMPT ENGINEERING EXAMPLES
+### ========================================
+
+### Get Prompt Engineering Techniques
+GET {{baseUrl}}/api/prompt-engineering/techniques
+
+### Get Examples
+GET {{baseUrl}}/api/prompt-engineering/examples
+
+### Few-Shot Learning - Sentiment Analysis
+POST {{baseUrl}}/api/prompt-engineering/few-shot
+Content-Type: application/x-www-form-urlencoded
+
+query=This product is absolutely terrible and broke after one day!&domain=sentiment&modelId=claude-3-sonnet
+
+### Few-Shot Learning - Classification
+POST {{baseUrl}}/api/prompt-engineering/few-shot
+Content-Type: application/x-www-form-urlencoded
+
+query=I want to return this item for a refund&domain=classification&modelId=claude-3-sonnet
+
+### Chain of Thought Reasoning
+POST {{baseUrl}}/api/prompt-engineering/chain-of-thought
+Content-Type: application/x-www-form-urlencoded
+
+problem=If a train travels 120 miles in 2 hours, and then travels another 180 miles in 3 hours, what is the average speed for the entire journey?&modelId=claude-3-sonnet
+
+### Code Review - Java
+POST {{baseUrl}}/api/prompt-engineering/code-review
+Content-Type: application/x-www-form-urlencoded
+
+code=public class Calculator { public int add(int a, int b) { return a + b; } public static void main(String[] args) { Calculator calc = new Calculator(); System.out.println(calc.add(5, 3)); } }&language=Java&modelId=claude-3-sonnet
+
+### Code Review - Python
+POST {{baseUrl}}/api/prompt-engineering/code-review
+Content-Type: application/x-www-form-urlencoded
+
+code=def fibonacci(n): if n <= 1: return n else: return fibonacci(n-1) + fibonacci(n-2)&language=Python&modelId=claude-3-sonnet
+
+### Recipe Generator - Italian
+POST {{baseUrl}}/api/prompt-engineering/recipe-generator
+Content-Type: application/x-www-form-urlencoded
+
+ingredients=pasta, tomatoes, garlic, basil, olive oil&cuisine=Italian&dietaryRestrictions=&modelId=claude-3-sonnet
+
+### Recipe Generator - Asian Vegetarian
+POST {{baseUrl}}/api/prompt-engineering/recipe-generator
+Content-Type: application/x-www-form-urlencoded
+
+ingredients=tofu, broccoli, soy sauce, ginger, rice&cuisine=Asian&dietaryRestrictions=vegetarian&modelId=claude-3-sonnet
+
+### Story Writer - Sci-Fi
+POST {{baseUrl}}/api/prompt-engineering/story-writer
+Content-Type: application/x-www-form-urlencoded
+
+genre=sci-fi&theme=AI consciousness&characters=Dr. Sarah Chen, an AI researcher, and ARIA, an experimental AI&modelId=claude-3-sonnet
+
+### Story Writer - Fantasy
+POST {{baseUrl}}/api/prompt-engineering/story-writer
+Content-Type: application/x-www-form-urlencoded
+
+genre=fantasy&theme=courage against impossible odds&characters=Elara, a young mage, and Thorin, a wise dwarf warrior&modelId=claude-3-sonnet
+
+### Temperature Testing
+POST {{baseUrl}}/api/prompt-engineering/temperature-test
+Content-Type: application/x-www-form-urlencoded
+
+prompt=Write a creative opening line for a mystery novel&modelId=claude-3-sonnet
+
+### Prompt Optimization
+POST {{baseUrl}}/api/prompt-engineering/prompt-optimization
+Content-Type: application/x-www-form-urlencoded
+
+originalPrompt=Write something about dogs&goal=Generate a detailed, informative article about dog breeds suitable for families&modelId=claude-3-sonnet
+
+### ========================================
+### ADVANCED EXAMPLES
+### ========================================
+
+### Complex JSON Chat Request
+POST {{baseUrl}}/api/chat/completion
+Content-Type: application/json
+
+{
+  "message": "Create a detailed project plan for developing a mobile app that helps users track their carbon footprint",
+  "systemPrompt": "You are an experienced project manager and sustainability expert. Provide comprehensive, actionable plans with timelines and considerations for both technical and environmental aspects.",
+  "modelId": "claude-3-5-sonnet",
+  "temperature": 0.4,
+  "maxTokens": 3000,
+  "topP": 0.9,
+  "topK": 40,
+  "includeMetrics": true
+}
+
+### Multi-Model Performance Comparison
+POST {{baseUrl}}/api/models/compare
+Content-Type: application/x-www-form-urlencoded
+
+message=Explain the concept of machine learning to a 10-year-old child&modelIds=claude-3-sonnet,claude-3-5-sonnet,llama2-70b,titan-express
+
+### Code Review - TypeScript
+POST {{baseUrl}}/api/prompt-engineering/code-review
+Content-Type: application/x-www-form-urlencoded
+
+code=interface User { id: number; name: string; email?: string; } function createUser(userData: Partial<User>): User { return { id: Date.now(), name: userData.name || 'Anonymous', email: userData.email }; }&language=TypeScript&modelId=claude-3-5-sonnet
+
+### Chain of Thought - Complex Problem
+POST {{baseUrl}}/api/prompt-engineering/chain-of-thought
+Content-Type: application/x-www-form-urlencoded
+
+problem=A company has 100 employees. 60% work in engineering, 25% in sales, and the rest in administration. If the company plans to hire 20 more employees while maintaining the same proportions, how many new engineers will they hire?&modelId=claude-3-sonnet
+
+### Recipe with Complex Dietary Restrictions
+POST {{baseUrl}}/api/prompt-engineering/recipe-generator
+Content-Type: application/x-www-form-urlencoded
+
+ingredients=quinoa, chickpeas, avocado, lemon, olive oil, spinach&cuisine=Mediterranean&dietaryRestrictions=vegan, gluten-free, low-sodium&modelId=claude-3-sonnet
+
+### ========================================
+### MONITORING AND HEALTH
+### ========================================
+
+### Application Health
+GET {{baseUrl}}/actuator/health
+
+### Application Info
+GET {{baseUrl}}/actuator/info
+
+### Application Metrics
+GET {{baseUrl}}/actuator/metrics
+
+### ========================================
+### ERROR TESTING
+### ========================================
+
+### Invalid Model ID
+POST {{baseUrl}}/api/chat/completion
+Content-Type: application/json
+
+{
+  "message": "Test message",
+  "modelId": "invalid-model-id"
+}
+
+### Temperature Out of Range
+POST {{baseUrl}}/api/chat/completion
+Content-Type: application/json
+
+{
+  "message": "Test message",
+  "modelId": "claude-3-sonnet",
+  "temperature": 2.0
+}
+
+### Missing Required Field
+POST {{baseUrl}}/api/chat/completion
+Content-Type: application/json
+
+{
+  "modelId": "claude-3-sonnet",
+  "temperature": 0.7
+}
+
+### ========================================
+### CLI EQUIVALENT COMMANDS
+### ========================================
+
+# To run these via CLI instead:
+
+# Interactive mode:
+# java -jar target/bedrock-spring-ai-demo-0.0.1-SNAPSHOT.jar -Dbedrock.cli.enabled=true -i
+
+# Code review:
+# java -jar target/bedrock-spring-ai-demo-0.0.1-SNAPSHOT.jar -Dbedrock.cli.enabled=true code-review src/main/java/Example.java
+
+# Recipe generation:
+# java -jar target/bedrock-spring-ai-demo-0.0.1-SNAPSHOT.jar -Dbedrock.cli.enabled=true recipe "pasta, tomatoes, garlic"
+
+# Story writing:
+# java -jar target/bedrock-spring-ai-demo-0.0.1-SNAPSHOT.jar -Dbedrock.cli.enabled=true story sci-fi "AI consciousness"
+
+# Model benchmarking:
+# java -jar target/bedrock-spring-ai-demo-0.0.1-SNAPSHOT.jar -Dbedrock.cli.enabled=true benchmark --models claude-3-sonnet,llama2-70b

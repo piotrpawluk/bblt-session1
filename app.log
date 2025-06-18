@@ -1,0 +1,133 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.example:bedrock-spring-ai-demo >-----------------
+[INFO] Building bedrock-spring-ai-demo 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ bedrock-spring-ai-demo ---
+[INFO] Deleting /Users/ppawluk/workspace/bblt-session1/target
+[INFO] 
+[INFO] >>> spring-boot:3.3.5:run (default-cli) > test-compile @ bedrock-spring-ai-demo >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ bedrock-spring-ai-demo ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ bedrock-spring-ai-demo ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 13 source files with javac [debug parameters release 21] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ bedrock-spring-ai-demo ---
+[INFO] skip non existing resourceDirectory /Users/ppawluk/workspace/bblt-session1/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ bedrock-spring-ai-demo ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:3.3.5:run (default-cli) < test-compile @ bedrock-spring-ai-demo <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.5:run (default-cli) @ bedrock-spring-ai-demo ---
+[INFO] Attaching agents: []
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+21:19:42.601 [restartedMain] INFO  c.e.bedrock.BedrockDemoApplication - Starting BedrockDemoApplication using Java 23.0.2 with PID 37471 (/Users/ppawluk/workspace/bblt-session1/target/classes started by ppawluk in /Users/ppawluk/workspace/bblt-session1)
+21:19:42.602 [restartedMain] DEBUG c.e.bedrock.BedrockDemoApplication - Running with Spring Boot v3.3.5, Spring v6.1.14
+21:19:42.602 [restartedMain] INFO  c.e.bedrock.BedrockDemoApplication - The following 1 profile is active: "dev"
+21:19:42.626 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+21:19:42.626 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+21:19:43.100 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8911 (http)
+21:19:43.106 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+21:19:43.106 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
+21:19:43.121 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+21:19:43.121 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 494 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+21:19:43.617 [restartedMain] WARN  o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+21:19:43.620 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+21:19:43.643 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8911 (http) with context path '/'
+21:19:43.651 [restartedMain] INFO  c.e.bedrock.BedrockDemoApplication - Started BedrockDemoApplication in 1.205 seconds (process running for 1.379)
+==============================================
+AWS Bedrock Spring AI Demo Application Started
+==============================================
+Week 1 Presentation - Foundation Models & API Integration
+
+Available endpoints:
+  - GET  /api/health
+  - POST /api/chat/completion
+  - POST /api/chat/stream
+  - POST /api/models/compare
+  - GET  /api/models/list
+  - POST /api/prompt-engineering/few-shot
+  - POST /api/prompt-engineering/chain-of-thought
+
+Make sure AWS credentials are configured!
+==============================================
+21:20:01.288 [http-nio-8911-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+21:20:01.288 [http-nio-8911-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+21:20:01.289 [http-nio-8911-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+21:21:14.209 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 17 class path changes (0 additions, 0 deletions, 17 modifications)
+21:21:15.838 [Thread-1] WARN  org.apache.tomcat.util.net.Acceptor - The acceptor thread [http-nio-8911-Acceptor] did not stop cleanly
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+21:21:15.942 [restartedMain] INFO  c.e.bedrock.BedrockDemoApplication - Starting BedrockDemoApplication using Java 23.0.2 with PID 37471 (/Users/ppawluk/workspace/bblt-session1/target/classes started by ppawluk in /Users/ppawluk/workspace/bblt-session1)
+21:21:15.942 [restartedMain] DEBUG c.e.bedrock.BedrockDemoApplication - Running with Spring Boot v3.3.5, Spring v6.1.14
+21:21:15.943 [restartedMain] INFO  c.e.bedrock.BedrockDemoApplication - The following 1 profile is active: "dev"
+21:21:16.084 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8911 (http)
+21:21:16.084 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+21:21:16.084 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
+21:21:16.089 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+21:21:16.089 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 146 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+21:21:16.175 [restartedMain] WARN  o.s.b.d.a.OptionalLiveReloadServer - Unable to start LiveReload server
+21:21:16.177 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+21:21:16.183 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8911 (http) with context path '/'
+21:21:16.188 [restartedMain] INFO  c.e.bedrock.BedrockDemoApplication - Started BedrockDemoApplication in 0.259 seconds (process running for 93.916)
+==============================================
+AWS Bedrock Spring AI Demo Application Started
+==============================================
+Week 1 Presentation - Foundation Models & API Integration
+
+Available endpoints:
+  - GET  /api/health
+  - POST /api/chat/completion
+  - POST /api/chat/stream
+  - POST /api/models/compare
+  - GET  /api/models/list
+  - POST /api/prompt-engineering/few-shot
+  - POST /api/prompt-engineering/chain-of-thought
+
+Make sure AWS credentials are configured!
+==============================================
+21:21:16.189 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:03 min
+[INFO] Finished at: 2025-06-18T21:21:44+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.3.5:run (default-cli) on project bedrock-spring-ai-demo: Process terminated with exit code: 143 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
