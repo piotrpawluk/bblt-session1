@@ -257,7 +257,7 @@
             <!-- Chat Input -->
             <div class="mb-3">
                 <label class="form-label">Your Message:</label>
-                <textarea class="form-control" id="chatInput" rows="3" placeholder="Enter your message here...">Explain quantum computing in simple terms</textarea>
+                <textarea class="form-control" id="chatInput" rows="10" placeholder="Enter your message here...">Explain quantum computing in simple terms</textarea>
             </div>
 
             <!-- Action Buttons -->
@@ -674,63 +674,29 @@
 
         // Test few-shot learning
         async function testFewShot() {
-            showLoading();
+            const userQuery = 'This product exceeded my expectations!';
+            const domain = 'sentiment';
+            const fullPrompt = buildFewShotPrompt(userQuery, domain);
             
-            try {
-                const response = await fetch('/api/prompt-engineering/few-shot', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        query: 'This product exceeded my expectations!',
-                        domain: 'sentiment',
-                        modelId: 'claude-3-7-sonnet'
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (response.ok) {
-                    updateResponse(`Few-Shot Learning Result:\n\n${data.content || data.response || 'No content received'}`);
-                } else {
-                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to test few-shot learning'}`);
-                }
-            } catch (error) {
-                updateResponse(`Error: ${error.message}`);
-            }
-
-            hideLoading();
+            // Display the prompt in chatInput so user can see and modify it
+            document.getElementById('chatInput').value = fullPrompt;
+            document.getElementById('modelSelect').value = 'claude-3-7-sonnet';
+            
+            // Auto-send the message
+            await sendMessage();
         }
 
         // Test chain of thought
         async function testChainOfThought() {
-            showLoading();
+            const problem = 'If a train travels 120 miles in 2 hours, what is its average speed?';
+            const fullPrompt = buildChainOfThoughtPrompt(problem);
             
-            try {
-                const response = await fetch('/api/prompt-engineering/chain-of-thought', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        problem: 'If a train travels 120 miles in 2 hours, what is its average speed?',
-                        modelId: 'claude-3-7-sonnet'
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (response.ok) {
-                    updateResponse(`Chain of Thought Result:\n\n${data.content || data.response || 'No content received'}`);
-                } else {
-                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to test chain of thought'}`);
-                }
-            } catch (error) {
-                updateResponse(`Error: ${error.message}`);
-            }
-
-            hideLoading();
+            // Display the prompt in chatInput so user can see and modify it
+            document.getElementById('chatInput').value = fullPrompt;
+            document.getElementById('modelSelect').value = 'claude-3-7-sonnet';
+            
+            // Auto-send the message
+            await sendMessage();
         }
 
         // Review code
@@ -742,33 +708,15 @@
                 return;
             }
 
-            showLoading();
+            const language = 'Java';
+            const fullPrompt = buildCodeReviewPrompt(code, language);
             
-            try {
-                const response = await fetch('/api/prompt-engineering/code-review', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        code: code,
-                        language: 'Java',
-                        modelId: 'claude-4-opus'
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (response.ok) {
-                    updateResponse(`Code Review Results:\n\n${data.content || data.response || 'No content received'}`);
-                } else {
-                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to review code'}`);
-                }
-            } catch (error) {
-                updateResponse(`Error: ${error.message}`);
-            }
-
-            hideLoading();
+            // Display the prompt in chatInput so user can see and modify it
+            document.getElementById('chatInput').value = fullPrompt;
+            document.getElementById('modelSelect').value = 'claude-4-opus';
+            
+            // Auto-send the message
+            await sendMessage();
         }
 
         // Generate recipe
@@ -780,32 +728,16 @@
                 return;
             }
 
-            showLoading();
+            const cuisine = 'Italian'; // Default cuisine
+            const dietaryRestrictions = ''; // No restrictions by default
+            const fullPrompt = buildRecipePrompt(ingredients, cuisine, dietaryRestrictions);
             
-            try {
-                const response = await fetch('/api/prompt-engineering/recipe-generator', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        ingredients: ingredients,
-                        modelId: 'claude-3-7-sonnet'
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (response.ok) {
-                    updateResponse(`Generated Recipe:\n\n${data.content || data.response || 'No content received'}`);
-                } else {
-                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to generate recipe'}`);
-                }
-            } catch (error) {
-                updateResponse(`Error: ${error.message}`);
-            }
-
-            hideLoading();
+            // Display the prompt in chatInput so user can see and modify it
+            document.getElementById('chatInput').value = fullPrompt;
+            document.getElementById('modelSelect').value = 'claude-3-7-sonnet';
+            
+            // Auto-send the message
+            await sendMessage();
         }
 
         // Write story
@@ -817,33 +749,16 @@
                 return;
             }
 
-            showLoading();
+            const genre = 'sci-fi'; // Default genre
+            const characters = ''; // Let AI create characters
+            const fullPrompt = buildStoryPrompt(genre, theme, characters);
             
-            try {
-                const response = await fetch('/api/prompt-engineering/story-writer', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        theme: theme,
-                        length: 'short',
-                        modelId: 'claude-4-opus'
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (response.ok) {
-                    updateResponse(`Generated Story:\n\n${data.content || data.response || 'No content received'}`);
-                } else {
-                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to write story'}`);
-                }
-            } catch (error) {
-                updateResponse(`Error: ${error.message}`);
-            }
-
-            hideLoading();
+            // Display the prompt in chatInput so user can see and modify it
+            document.getElementById('chatInput').value = fullPrompt;
+            document.getElementById('modelSelect').value = 'claude-4-opus';
+            
+            // Auto-send the message
+            await sendMessage();
         }
 
         // Run benchmark
@@ -926,6 +841,147 @@ MODEL COMPARISON TABLE:
 * Context Window = Maximum input size
             `;
             updateResponse(comparisonData);
+        }
+
+        // Prompt Template Functions
+        function buildFewShotPrompt(userQuery, domain) {
+            const examples = getFewShotExamples(domain);
+            const systemPrompt = getFewShotSystemPrompt(domain);
+            
+            return `${systemPrompt}\n\n${examples}\n\nNow apply the same pattern to this:\n${userQuery}`;
+        }
+
+        function getFewShotSystemPrompt(domain) {
+            switch (domain.toLowerCase()) {
+                case 'sentiment':
+                    return 'You are a sentiment analysis expert. Classify text as POSITIVE, NEGATIVE, or NEUTRAL. Consider context, tone, and emotional indicators.';
+                case 'classification':
+                    return 'You are a text classification expert. Categorize the input based on the examples provided. Use the same categories and format as shown in the examples.';
+                case 'translation':
+                    return 'You are a professional translator. Provide accurate, natural-sounding translations that preserve meaning, tone, and cultural context.';
+                default:
+                    return 'You are an expert assistant. Follow the patterns shown in the examples to provide accurate and helpful responses.';
+            }
+        }
+
+        function getFewShotExamples(domain) {
+            switch (domain.toLowerCase()) {
+                case 'sentiment':
+                    return `Examples:
+
+Text: "I love this product! It works perfectly and exceeded my expectations."
+Sentiment: POSITIVE
+
+Text: "This item broke after one day. Completely disappointed and frustrated."
+Sentiment: NEGATIVE
+
+Text: "The product is okay. It does what it's supposed to do."
+Sentiment: NEUTRAL`;
+                case 'classification':
+                    return `Examples:
+
+Text: "How do I reset my password?"
+Category: TECHNICAL_SUPPORT
+
+Text: "I want to return this item for a refund"
+Category: RETURNS
+
+Text: "When will my order arrive?"
+Category: SHIPPING`;
+                case 'translation':
+                    return `Examples:
+
+English: "Good morning, how are you today?"
+Spanish: "Buenos días, ¿cómo estás hoy?"
+
+English: "Thank you for your help"
+Spanish: "Gracias por tu ayuda"
+
+English: "Where is the nearest restaurant?"
+Spanish: "¿Dónde está el restaurante más cercano?"`;
+                default:
+                    return 'Examples will be provided based on the specific task.';
+            }
+        }
+
+        function buildChainOfThoughtPrompt(problem) {
+            const systemPrompt = `You are an expert problem solver. When given a problem, break it down into clear, logical steps.
+Follow this format:
+1. Understanding: First, explain what the problem is asking
+2. Analysis: Break down the problem into smaller parts
+3. Step-by-step solution: Work through each step methodically
+4. Verification: Check your answer makes sense
+5. Final answer: Provide the clear, final answer
+
+Think step by step and show your reasoning clearly.`;
+
+            return `${systemPrompt}\n\nProblem: ${problem}\n\nPlease solve this problem using step-by-step reasoning. Show all your work and explain each step clearly.`;
+        }
+
+        function buildCodeReviewPrompt(code, language) {
+            const systemPrompt = `You are an experienced senior software engineer and code reviewer. 
+Your task is to review code for:
+1. Code quality and best practices
+2. Security vulnerabilities
+3. Performance optimizations
+4. Maintainability and readability
+5. Adherence to language-specific conventions
+
+Provide constructive feedback with specific examples and suggestions.`;
+
+            return `${systemPrompt}\n\nPlease review the following ${language} code:
+
+\`\`\`${language}
+${code}
+\`\`\`
+
+Provide a detailed code review including:
+- Overall assessment
+- Specific issues found
+- Recommendations for improvement
+- Security considerations
+- Performance suggestions`;
+        }
+
+        function buildRecipePrompt(ingredients, cuisine = '', dietaryRestrictions = '') {
+            const systemPrompt = `You are a professional chef and recipe developer. Create delicious, practical recipes that are:
+- Easy to follow with clear instructions
+- Include precise measurements and cooking times
+- Consider dietary restrictions and preferences
+- Provide helpful cooking tips and variations`;
+
+            return `${systemPrompt}\n\nCreate a ${cuisine} recipe using the following ingredients: ${ingredients}
+
+Dietary restrictions: ${dietaryRestrictions || 'None'}
+
+Please provide:
+1. Recipe name
+2. Prep time and cook time
+3. Servings
+4. Complete ingredient list with measurements
+5. Step-by-step cooking instructions
+6. Chef's tips or variations
+7. Nutritional highlights`;
+        }
+
+        function buildStoryPrompt(genre, theme, characters = '') {
+            const systemPrompt = `You are a creative writer and storyteller. Write engaging stories that:
+- Have well-developed characters and plot
+- Include vivid descriptions and dialogue
+- Maintain consistent tone and style
+- Create emotional connection with readers
+- Follow proper story structure`;
+
+            return `${systemPrompt}\n\nWrite a ${genre} story with the following elements:
+Theme: ${theme}
+Characters: ${characters || 'Create your own characters'}
+
+Requirements:
+- Length: 800-1200 words
+- Include dialogue and descriptive scenes
+- Develop character relationships
+- Create a satisfying conclusion
+- Maintain appropriate tone for the genre`;
         }
 
         // Initialize page

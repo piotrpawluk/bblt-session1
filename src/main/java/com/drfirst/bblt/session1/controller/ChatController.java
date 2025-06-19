@@ -3,6 +3,7 @@ package com.drfirst.bblt.session1.controller;
 import com.drfirst.bblt.session1.model.ChatRequest;
 import com.drfirst.bblt.session1.model.ChatResponse;
 import com.drfirst.bblt.session1.service.BedrockService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -140,6 +141,21 @@ public class ChatController {
                 "models", bedrockService.getAvailableModels(),
                 "count", bedrockService.getAvailableModels().size(),
                 "default", "claude-3-7-sonnet"
+        ));
+    }
+
+    @GetMapping("/circuit-breaker-status")
+    @Operation(
+        summary = "Get circuit breaker status for all models",
+        description = "Returns the current circuit breaker state and failure counts for all models"
+    )
+    public ResponseEntity<Map<String, Object>> getCircuitBreakerStatus() {
+        Map<String, String> status = bedrockService.getCircuitBreakerStatus();
+        
+        return ResponseEntity.ok(Map.of(
+                "circuitBreakerStatus", status,
+                "timestamp", System.currentTimeMillis(),
+                "info", "CLOSED = Normal operation, OPEN = Failing fast, HALF_OPEN = Testing recovery"
         ));
     }
 }
