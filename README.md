@@ -190,14 +190,24 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/service-account-key.json
 # Test Vertex AI access - list all available models
 gcloud ai models list --region=us-central1
 
-# Test Gemini models specifically (use REST API)
+# Test Vertex AI API access and project authentication
 gcloud auth print-access-token
-curl -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-     "https://us-central1-aiplatform.googleapis.com/v1/projects/your-vertex-project-id/locations/us-central1/publishers/google/models"
 
-# Alternative: Test with specific Gemini model
-curl -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-     "https://us-central1-aiplatform.googleapis.com/v1/projects/your-vertex-project-id/locations/us-central1/publishers/google/models/gemini-2.5-flash-preview-05-20"
+# Verify your project and location are configured correctly
+gcloud config get-value project
+gcloud config get-value compute/region
+
+# Test Gemini API with a simple content generation call
+curl -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "Content-Type: application/json" \
+  "https://us-central1-aiplatform.googleapis.com/v1/projects/$(gcloud config get-value project)/locations/us-central1/publishers/google/models/gemini-2.5-flash-preview-05-20:generateContent" \
+  -d '{
+    "contents": [{
+      "role": "user",
+      "parts": [{"text": "Hello! Can you confirm that Vertex AI is working?"}]
+    }]
+  }'
 ```
 
 #### Vertex AI Configuration in Application
@@ -560,6 +570,12 @@ This project is for educational purposes as part of the Week 1 foundation models
 8. **Region Mismatch**
    - Ensure Vertex AI location matches your intended region
    - Some Gemini models are only available in specific regions
+   - Use `gcloud config get-value compute/region` to check current region
+
+9. **Vertex AI API Endpoint Issues**
+   - The correct endpoint format is: `https://REGION-aiplatform.googleapis.com/v1/projects/PROJECT/locations/LOCATION/publishers/google/models/MODEL:generateContent`
+   - For listing models, use: `gcloud ai models list --region=REGION`
+   - Test API access with: `gcloud auth print-access-token`
 
 ### Support
 
