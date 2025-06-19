@@ -76,7 +76,7 @@ public class DirectBedrockController {
             "claude_example", Map.of(
                 "message", "Explain the difference between AWS Bedrock SDK and Spring AI",
                 "systemPrompt", "You are a helpful AI assistant explaining AWS services",
-                "modelId", "claude-3-sonnet",
+                "modelId", "claude-3-7-sonnet",
                 "maxTokens", 1000,
                 "temperature", 0.7,
                 "topP", 0.9,
@@ -121,7 +121,7 @@ public class DirectBedrockController {
                     "output_tokens", "150"
                 ),
                 "stop_reason", "end_turn",
-                "model", "claude-3-sonnet"
+                "model", "claude-3-7-sonnet"
             )
         );
         

@@ -32,7 +32,7 @@ public class BedrockDemoApplication {
             System.out.println("");
             System.out.println("Direct AWS Bedrock SDK (without Spring AI):");
             System.out.println("  - POST /api/direct-bedrock/claude");
-            System.out.println("  - POST /api/direct-bedrock/llama");
+            System.out.println("  - POST /api/direct-bedrock/nova-pro");
             System.out.println("  - GET  /api/direct-bedrock/examples");
             System.out.println("  - GET  /api/direct-bedrock/payload-formats");
             System.out.println("");

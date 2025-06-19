@@ -28,7 +28,7 @@ public class ModelComparisonController {
     @PostMapping("/compare")
     public CompletableFuture<ResponseEntity<Map<String, Object>>> compareModels(
             @RequestParam String message,
-            @RequestParam(defaultValue = "claude-3-sonnet,claude-3-5-sonnet,nova-pro,gemini-2.5-flash") List<String> modelIds) {
+            @RequestParam(defaultValue = "claude-3-7-sonnet,claude-4-opus,nova-pro,gemini-2.5-flash") List<String> modelIds) {
         
         log.info("Comparing models: " + modelIds + " with message: " + message);
         
@@ -58,7 +58,7 @@ public class ModelComparisonController {
 
     @PostMapping("/benchmark")
     public CompletableFuture<ResponseEntity<Map<String, Object>>> benchmarkModels(
-            @RequestParam(defaultValue = "claude-3-sonnet,claude-3-5-sonnet,nova-pro,gemini-2.5-flash") List<String> modelIds) {
+            @RequestParam(defaultValue = "claude-3-7-sonnet,claude-4-opus,nova-pro,gemini-2.5-flash") List<String> modelIds) {
         
         log.info("Benchmarking models: " + modelIds);
         
@@ -107,8 +107,8 @@ public class ModelComparisonController {
                         "Quality Assessment"
                 ),
                 "recommendedUses", Map.of(
-                        "claude-3-sonnet", "General purpose, balanced performance",
-                        "claude-3-5-sonnet", "Latest features, improved reasoning",
+                        "claude-3-7-sonnet", "Enhanced reasoning, improved accuracy",
+                        "claude-4-opus", "Most capable model, advanced reasoning",
                         "nova-pro", "AWS native, high context window",
                         "titan-express", "Fast responses, AWS native",
                         "gemini-2.5-flash", "Google AI, ultra-fast, 2M token context"
@@ -259,7 +259,7 @@ public class ModelComparisonController {
                 "speed", "For fastest responses, use: " + fastestModel,
                 "cost", "For most cost-effective option, use: " + cheapestModel,
                 "detail", "For most detailed responses, use: " + mostVerboseModel,
-                "general", "For balanced performance, Claude 3 Sonnet is recommended"
+                "general", "For balanced performance, Claude 3.7 Sonnet is recommended"
         );
     }
 }

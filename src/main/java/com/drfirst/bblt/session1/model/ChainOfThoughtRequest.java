@@ -26,7 +26,7 @@ public class ChainOfThoughtRequest {
     }
 
     public String getModelId() {
-        return modelId != null ? modelId : "claude-3-sonnet";
+        return modelId != null ? modelId : "claude-3-7-sonnet";
     }
 
     public void setModelId(String modelId) {

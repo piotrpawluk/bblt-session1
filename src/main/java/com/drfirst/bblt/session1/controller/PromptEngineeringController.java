@@ -106,7 +106,7 @@ public class PromptEngineeringController {
     @PostMapping("/temperature-test")
     public ResponseEntity<Map<String, ChatResponse>> temperatureTest(
             @RequestParam String prompt,
-            @RequestParam(defaultValue = "claude-3-sonnet") String modelId) {
+            @RequestParam(defaultValue = "claude-3-7-sonnet") String modelId) {
         
         log.info("Running temperature test with model: " + modelId);
         
@@ -139,7 +139,7 @@ public class PromptEngineeringController {
     public ResponseEntity<Map<String, Object>> optimizePrompt(
             @RequestParam String originalPrompt,
             @RequestParam String goal,
-            @RequestParam(defaultValue = "claude-3-sonnet") String modelId) {
+            @RequestParam(defaultValue = "claude-3-7-sonnet") String modelId) {
         
         log.info("Optimizing prompt for goal: " + goal + " with model: " + modelId);
         

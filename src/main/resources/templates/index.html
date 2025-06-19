@@ -156,7 +156,7 @@
                 <div class="col-md-6">
                     <h5><i class="fas fa-check-circle text-success"></i> Practical Implementation</h5>
                     <ul>
-                        <li>First LLM API calls to Claude 3.5 & 4.0</li>
+                        <li>First LLM API calls to Claude 3.7 & 4.0</li>
                         <li>Prompt engineering techniques</li>
                         <li>Performance monitoring & cost analysis</li>
                     </ul>
@@ -170,20 +170,40 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="model-card">
-                        <h5><span class="badge-anthropic model-badge">Anthropic Claude 3.5 Sonnet</span></h5>
-                        <p><strong>Context:</strong> 200K tokens | <strong>Cost:</strong> $0.003/$0.015 per 1K tokens</p>
-                        <p>Latest Anthropic model with enhanced reasoning and code capabilities</p>
-                        <button class="btn btn-custom btn-sm" onclick="testModel('claude-3-5-sonnet')">
+                        <h5><span class="badge-anthropic model-badge">Anthropic Claude 4.0 Opus</span></h5>
+                        <p><strong>Context:</strong> 200K tokens | <strong>Cost:</strong> $0.015/$0.075 per 1K tokens</p>
+                        <p>Most capable Anthropic model with advanced reasoning and complex problem-solving</p>
+                        <button class="btn btn-custom btn-sm" onclick="testModel('claude-4-opus')">
                             <i class="fas fa-play"></i> Test Model
                         </button>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="model-card">
-                        <h5><span class="badge-anthropic model-badge">Anthropic Claude 3 Sonnet</span></h5>
+                        <h5><span class="badge-anthropic model-badge">Anthropic Claude 3.7 Sonnet</span></h5>
                         <p><strong>Context:</strong> 200K tokens | <strong>Cost:</strong> $0.003/$0.015 per 1K tokens</p>
-                        <p>Balanced model for general-purpose tasks and analysis</p>
-                        <button class="btn btn-custom btn-sm" onclick="testModel('claude-3-sonnet')">
+                        <p>Enhanced reasoning model with improved accuracy and understanding</p>
+                        <button class="btn btn-custom btn-sm" onclick="testModel('claude-3-7-sonnet')">
+                            <i class="fas fa-play"></i> Test Model
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="model-card">
+                        <h5><span class="badge-amazon model-badge">Amazon Nova Pro</span></h5>
+                        <p><strong>Context:</strong> 300K tokens | <strong>Cost:</strong> $0.0008/$0.0032 per 1K tokens</p>
+                        <p>Amazon's latest foundation model with high context window and AWS native integration</p>
+                        <button class="btn btn-custom btn-sm" onclick="testModel('nova-pro')">
+                            <i class="fas fa-play"></i> Test Model
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="model-card">
+                        <h5><span class="badge-amazon model-badge">Amazon Titan Express</span></h5>
+                        <p><strong>Context:</strong> 8K tokens | <strong>Cost:</strong> $0.0002/$0.0006 per 1K tokens</p>
+                        <p>Amazon's fast and cost-effective model for quick responses and general tasks</p>
+                        <button class="btn btn-custom btn-sm" onclick="testModel('titan-express')">
                             <i class="fas fa-play"></i> Test Model
                         </button>
                     </div>
@@ -210,11 +230,12 @@
                 <div class="col-md-6">
                     <label class="form-label">Select Model:</label>
                     <select class="form-select" id="modelSelect">
-                        <option value="claude-3-5-sonnet">Claude 3.5 Sonnet (Spring AI)</option>
-                        <option value="claude-3-sonnet">Claude 3 Sonnet (Spring AI)</option>
+                        <option value="claude-4-opus">Claude 4.0 Opus (Spring AI)</option>
+                        <option value="claude-3-7-sonnet">Claude 3.7 Sonnet (Spring AI)</option>
                         <option value="nova-pro">Nova Pro (Spring AI)</option>
+                        <option value="titan-express">Titan Express (Spring AI)</option>
                         <option value="gemini-2.5-flash">Gemini 2.5 Flash (Spring AI)</option>
-                        <option value="claude-direct">Claude 3.5 Sonnet (Direct SDK)</option>
+                        <option value="claude-direct">Claude 3.7 Sonnet (Direct SDK)</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -493,6 +514,7 @@
                         },
                         body: JSON.stringify({
                             message: message,
+                            modelId: 'claude-3-7-sonnet',
                             temperature: parseFloat(temperature),
                             topP: parseFloat(topP),
                             maxTokens: 1000
@@ -542,7 +564,7 @@
             showLoading();
 
             try {
-                const response = await fetch(`/api/models/compare?message=${encodeURIComponent(message)}&modelIds=claude-3-5-sonnet,claude-3-sonnet,nova-pro,gemini-2.5-flash`, {
+                const response = await fetch(`/api/models/compare?message=${encodeURIComponent(message)}&modelIds=claude-4-opus,claude-3-7-sonnet,nova-pro,gemini-2.5-flash`, {
                     method: 'POST'
                 });
 
@@ -595,7 +617,7 @@
                     },
                     body: JSON.stringify({
                         message: message,
-                        modelId: model || 'claude-3-sonnet',
+                        modelId: model || 'claude-3-7-sonnet',
                         temperature: parseFloat(temperature),
                         topP: parseFloat(topP)
                     })
@@ -663,7 +685,7 @@
                     body: JSON.stringify({
                         query: 'This product exceeded my expectations!',
                         domain: 'sentiment',
-                        modelId: 'claude-3-sonnet'
+                        modelId: 'claude-3-7-sonnet'
                     })
                 });
 
@@ -693,7 +715,7 @@
                     },
                     body: JSON.stringify({
                         problem: 'If a train travels 120 miles in 2 hours, what is its average speed?',
-                        modelId: 'claude-3-sonnet'
+                        modelId: 'claude-3-7-sonnet'
                     })
                 });
 
@@ -731,7 +753,7 @@
                     body: JSON.stringify({
                         code: code,
                         language: 'Java',
-                        modelId: 'claude-3-5-sonnet'
+                        modelId: 'claude-4-opus'
                     })
                 });
 
@@ -768,7 +790,7 @@
                     },
                     body: JSON.stringify({
                         ingredients: ingredients,
-                        modelId: 'claude-3-sonnet'
+                        modelId: 'claude-3-7-sonnet'
                     })
                 });
 
@@ -806,7 +828,7 @@
                     body: JSON.stringify({
                         theme: theme,
                         length: 'short',
-                        modelId: 'claude-3-5-sonnet'
+                        modelId: 'claude-4-opus'
                     })
                 });
 
@@ -829,7 +851,7 @@
             showLoading();
             
             try {
-                const response = await fetch('/api/models/benchmark?modelIds=claude-3-5-sonnet,claude-3-sonnet,nova-pro,gemini-2.5-flash', {
+                const response = await fetch('/api/models/benchmark?modelIds=claude-4-opus,claude-3-7-sonnet,nova-pro,gemini-2.5-flash', {
                     method: 'POST'
                 });
 
@@ -892,8 +914,8 @@ MODEL COMPARISON TABLE:
 ┌─────────────────────┬─────────────┬────────────┬──────────────┬─────────────────┐
 │ Model               │ Context Win │ Cost (I/O) │ Speed        │ Best Use Case   │
 ├─────────────────────┼─────────────┼────────────┼──────────────┼─────────────────┤
-│ Claude 3.5 Sonnet   │ 200K tokens │ $3/$15     │ Very Fast    │ Code & Analysis │
-│ Claude 3 Sonnet     │ 200K tokens │ $3/$15     │ Fast         │ General Purpose │
+│ Claude 4.0 Opus     │ 200K tokens │ $15/$75    │ Most Capable │ Complex Analysis│
+│ Claude 3.7 Sonnet   │ 200K tokens │ $3/$15     │ Fast         │ Enhanced Reasoning│
 │ Nova Pro            │ 300K tokens │ $0.8/$3.2  │ Fast         │ AWS Native      │
 │ Gemini 2.5 Flash    │ 1M tokens   │ $0.15/$0.6 │ Ultra Fast   │ Large Context   │
 │ Titan Express       │ 8K tokens   │ $0.2/$0.6  │ Fast         │ Quick Tasks     │

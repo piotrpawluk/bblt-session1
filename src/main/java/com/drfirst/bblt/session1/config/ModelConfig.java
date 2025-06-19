@@ -23,27 +23,27 @@ public class ModelConfig {
 
     @PostConstruct
     public void init() {
-        // Default Claude 3 Sonnet configuration
-        ModelProperties claudeSonnet = new ModelProperties();
-        claudeSonnet.setModelId("anthropic.claude-3-sonnet-20240229-v1:0");
-        claudeSonnet.setDisplayName("Claude 3 Sonnet");
-        claudeSonnet.setProvider("Anthropic");
-        claudeSonnet.setMaxTokens(4096);
-        claudeSonnet.setContextWindow(200000);
-        claudeSonnet.setCostPer1kInputTokens(0.003);
-        claudeSonnet.setCostPer1kOutputTokens(0.015);
-        models.put("claude-3-sonnet", claudeSonnet);
+        // Claude 3.7 Sonnet configuration
+        ModelProperties claude37Sonnet = new ModelProperties();
+        claude37Sonnet.setModelId("us.anthropic.claude-3-7-sonnet-20250219-v1:0");
+        claude37Sonnet.setDisplayName("Claude 3.7 Sonnet");
+        claude37Sonnet.setProvider("Anthropic");
+        claude37Sonnet.setMaxTokens(8192);
+        claude37Sonnet.setContextWindow(200000);
+        claude37Sonnet.setCostPer1kInputTokens(0.003);
+        claude37Sonnet.setCostPer1kOutputTokens(0.015);
+        models.put("claude-3-7-sonnet", claude37Sonnet);
 
-        // Claude 3.5 Sonnet configuration (original version)
-        ModelProperties claude35Sonnet = new ModelProperties();
-        claude35Sonnet.setModelId("anthropic.claude-3-5-sonnet-20240620-v1:0");
-        claude35Sonnet.setDisplayName("Claude 3.5 Sonnet");
-        claude35Sonnet.setProvider("Anthropic");
-        claude35Sonnet.setMaxTokens(4096);
-        claude35Sonnet.setContextWindow(200000);
-        claude35Sonnet.setCostPer1kInputTokens(0.003);
-        claude35Sonnet.setCostPer1kOutputTokens(0.015);
-        models.put("claude-3-5-sonnet", claude35Sonnet);
+        // Claude 4.0 Opus configuration
+        ModelProperties claude4Opus = new ModelProperties();
+        claude4Opus.setModelId("us.anthropic.claude-opus-4-20250514-v1:0");
+        claude4Opus.setDisplayName("Claude 4.0 Opus");
+        claude4Opus.setProvider("Anthropic");
+        claude4Opus.setMaxTokens(8192);
+        claude4Opus.setContextWindow(200000);
+        claude4Opus.setCostPer1kInputTokens(0.015);
+        claude4Opus.setCostPer1kOutputTokens(0.075);
+        models.put("claude-4-opus", claude4Opus);
 
 
         // Amazon Titan configuration

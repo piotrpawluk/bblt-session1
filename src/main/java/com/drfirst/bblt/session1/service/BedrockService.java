@@ -229,7 +229,7 @@ public class BedrockService {
     }
 
     public List<String> getAvailableModels() {
-        return List.of("claude-3-sonnet", "claude-3-5-sonnet", "nova-pro", "titan-express");
+        return List.of("claude-3-7-sonnet", "claude-4-opus", "nova-pro", "titan-express");
     }
 
 }

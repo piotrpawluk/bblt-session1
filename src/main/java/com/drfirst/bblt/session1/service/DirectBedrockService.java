@@ -78,9 +78,9 @@ public class DirectBedrockService {
     }
 
     /**
-     * Invoke Llama model directly using AWS Bedrock SDK
+     * Invoke Nova Pro model directly using AWS Bedrock SDK
      */
-    public ChatResponse invokeLlamaDirect(ChatRequest request) {
+    public ChatResponse invokeNovaProDirect(ChatRequest request) {
         long startTime = System.currentTimeMillis();
         
         try {
@@ -90,8 +90,8 @@ public class DirectBedrockService {
                 throw new IllegalArgumentException("Unknown model: " + request.modelId());
             }
 
-            // Build Llama-specific payload
-            Map<String, Object> payload = buildLlamaPayload(request, modelProps);
+            // Build Nova Pro-specific payload
+            Map<String, Object> payload = buildNovaProPayload(request, modelProps);
             String jsonPayload = objectMapper.writeValueAsString(payload);
             
             logger.info("Invoking model {} with direct SDK call", modelProps.getModelId());
@@ -109,7 +109,7 @@ public class DirectBedrockService {
             logger.debug("Response body: {}", responseBody);
 
             // Parse response
-            return parseLlamaResponse(responseBody, request.modelId(), startTime, modelProps);
+            return parseNovaProResponse(responseBody, request.modelId(), startTime, modelProps);
 
         } catch (Exception e) {
             logger.error("Error invoking model directly: {}", e.getMessage(), e);
@@ -145,12 +145,12 @@ public class DirectBedrockService {
     }
 
     /**
-     * Build Llama-specific payload according to Meta's format
+     * Build Nova Pro-specific payload according to Amazon's format
      */
-    private Map<String, Object> buildLlamaPayload(ChatRequest request, ModelConfig.ModelProperties modelProps) {
+    private Map<String, Object> buildNovaProPayload(ChatRequest request, ModelConfig.ModelProperties modelProps) {
         Map<String, Object> payload = new HashMap<>();
         
-        // Llama expects a different format
+        // Nova Pro expects Amazon's format
         String prompt = request.message();
         if (request.systemPrompt() != null && !request.systemPrompt().trim().isEmpty()) {
             prompt = request.systemPrompt() + "\n\nHuman: " + request.message() + "\n\nAssistant:";
@@ -199,16 +199,16 @@ public class DirectBedrockService {
     }
 
     /**
-     * Parse Llama response
+     * Parse Nova Pro response
      */
-    private ChatResponse parseLlamaResponse(String responseBody, String modelId, long startTime, ModelConfig.ModelProperties modelProps) {
+    private ChatResponse parseNovaProResponse(String responseBody, String modelId, long startTime, ModelConfig.ModelProperties modelProps) {
         try {
             JsonNode response = objectMapper.readTree(responseBody);
             
-            // Extract content from Llama response
+            // Extract content from Nova Pro response
             String content = response.path("generation").asText();
             
-            // Llama doesn't always provide detailed usage metrics
+            // Nova Pro provides detailed usage metrics
             // We'll estimate based on content length
             int inputTokens = estimateTokens(modelId + " input");
             int outputTokens = estimateTokens(content);
@@ -225,8 +225,8 @@ public class DirectBedrockService {
             return ChatResponse.success(content, modelId, metrics);
             
         } catch (Exception e) {
-            logger.error("Error parsing Llama response: {}", e.getMessage(), e);
-            return ChatResponse.error("Failed to parse Llama response: " + e.getMessage(), modelId);
+            logger.error("Error parsing Nova Pro response: {}", e.getMessage(), e);
+            return ChatResponse.error("Failed to parse Nova Pro response: " + e.getMessage(), modelId);
         }
     }
 

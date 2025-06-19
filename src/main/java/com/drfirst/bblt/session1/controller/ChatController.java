@@ -93,7 +93,7 @@ public class ChatController {
     public ResponseEntity<ChatResponse> chatWithSystemPrompt(
             @RequestParam String message,
             @RequestParam String systemPrompt,
-            @RequestParam(defaultValue = "claude-3-sonnet") String modelId,
+            @RequestParam(defaultValue = "claude-3-7-sonnet") String modelId,
             @RequestParam(defaultValue = "0.7") Double temperature,
             @RequestParam(defaultValue = "1000") Integer maxTokens) {
         
@@ -139,7 +139,7 @@ public class ChatController {
         return ResponseEntity.ok(Map.of(
                 "models", bedrockService.getAvailableModels(),
                 "count", bedrockService.getAvailableModels().size(),
-                "default", "claude-3-sonnet"
+                "default", "claude-3-7-sonnet"
         ));
     }
 }

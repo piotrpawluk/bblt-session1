@@ -29,15 +29,15 @@ spring.ai:
 # Model Configuration
 bedrock:
   models:
-    claude-3-sonnet:
-      model-id: anthropic.claude-3-sonnet-20240229-v1:0
+    claude-3-7-sonnet:
+      model-id: us.anthropic.claude-3-7-sonnet-20250219-v1:0
       cost-per-1k-input-tokens: 0.003
       cost-per-1k-output-tokens: 0.015
 
-    claude-3-5-sonnet:
-      model-id: anthropic.claude-3-5-sonnet-20240620-v1:0
-      cost-per-1k-input-tokens: 0.003
-      cost-per-1k-output-tokens: 0.015
+    claude-4-opus:
+      model-id: us.anthropic.claude-opus-4-20250514-v1:0
+      cost-per-1k-input-tokens: 0.015
+      cost-per-1k-output-tokens: 0.075
 
 
     titan-express:
@@ -84,11 +84,11 @@ info:
   app:
     name: ${spring.application.name}
     version: '@project.version@'
-    description: AWS Bedrock Spring AI Demo for Week 1 Presentation
+    description: AWS Bedrock Spring AI Demo with Claude 3.7 Sonnet and Claude 4.0 Opus
     week: 1
     topics:
       - AWS Bedrock setup and authentication
-      - Multiple foundation models (Claude, Llama, Titan)
+      - Multiple foundation models (Claude 3.7, Claude 4.0, Nova Pro)
       - Prompt engineering techniques
       - Model comparison and benchmarking
       - Streaming responses

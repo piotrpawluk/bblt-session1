@@ -35,12 +35,12 @@ public record ChatRequest(
 ) {
     // Default constructor with commonly used defaults
     public ChatRequest(String message) {
-        this(message, null, "claude-3-sonnet", 1000, 0.7, 0.9, 40, false, false);
+        this(message, null, "claude-3-7-sonnet", 1000, 0.7, 0.9, 40, false, false);
     }
     
     // Default values for null parameters
     public String modelId() {
-        return modelId != null ? modelId : "claude-3-sonnet";
+        return modelId != null ? modelId : "claude-3-7-sonnet";
     }
     
     public Integer maxTokens() {

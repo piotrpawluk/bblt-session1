@@ -34,9 +34,9 @@ public class OpenApiConfig {
                             ## Available Integrations
                             
                             ### AWS Bedrock (via Spring AI)
-                            - **Claude 3 Sonnet** - Anthropic's powerful reasoning model
-                            - **Claude 3.5 Sonnet** - Latest Anthropic model with enhanced capabilities  
-                            - **Llama 2 70B** - Meta's open-source large language model
+                            - **Claude 3.7 Sonnet** - Enhanced reasoning model with improved accuracy
+                            - **Claude 4.0 Opus** - Most capable Anthropic model  
+                            - **Nova Pro** - Amazon's latest foundation model
                             - **Amazon Titan Express** - Amazon's foundation model
                             
                             ### Google Vertex AI (via Spring AI)
