@@ -34,7 +34,7 @@ This project covers all topics from the Week 1 agenda:
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Java 17+
+- Java 21+
 - Maven 3.6+
 - AWS Account with Bedrock access
 - AWS CLI configured OR environment variables
