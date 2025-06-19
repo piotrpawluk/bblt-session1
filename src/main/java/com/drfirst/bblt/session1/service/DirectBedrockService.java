@@ -29,51 +29,96 @@ public class DirectBedrockService {
     
     private final BedrockRuntimeClient bedrockClient;
     private final ModelConfig modelConfig;
-    private final BedrockErrorHandler errorHandler;
     private final ObjectMapper objectMapper;
 
     public DirectBedrockService(BedrockRuntimeClient bedrockClient, 
-                               ModelConfig modelConfig,
-                               BedrockErrorHandler errorHandler) {
+                               ModelConfig modelConfig) {
         this.bedrockClient = bedrockClient;
         this.modelConfig = modelConfig;
-        this.errorHandler = errorHandler;
         this.objectMapper = new ObjectMapper();
     }
 
     /**
-     * Invoke Claude model directly using AWS Bedrock SDK with enhanced error handling
+     * Invoke Claude model directly using raw AWS Bedrock SDK calls
      */
     public ChatResponse invokeClaudeDirect(ChatRequest request) {
-        logger.info("Invoking Claude model directly with enhanced error handling: {}", request.modelId());
+        logger.info("Invoking Claude model directly using raw AWS SDK: {}", request.modelId());
+        long startTime = System.currentTimeMillis();
         
         try {
-            // Use the same error handler for consistency
-            return errorHandler.invokeWithRetry(request);
+            ModelConfig.ModelProperties modelProps = modelConfig.getModels().get(request.modelId());
+            if (modelProps == null) {
+                return ChatResponse.error("Unknown model: " + request.modelId(), request.modelId());
+            }
+            
+            // Build Claude-specific payload
+            Map<String, Object> payload = buildClaudePayload(request, modelProps);
+            String payloadJson = objectMapper.writeValueAsString(payload);
+            
+            logger.debug("Claude payload: {}", payloadJson);
+            
+            // Direct AWS SDK call
+            InvokeModelRequest invokeRequest = InvokeModelRequest.builder()
+                    .modelId(modelProps.getModelId())
+                    .body(SdkBytes.fromString(payloadJson, StandardCharsets.UTF_8))
+                    .contentType("application/json")
+                    .accept("application/json")
+                    .build();
+            
+            InvokeModelResponse response = bedrockClient.invokeModel(invokeRequest);
+            String responseBody = response.body().asString(StandardCharsets.UTF_8);
+            
+            logger.debug("Claude response: {}", responseBody);
+            
+            return parseClaudeResponse(responseBody, request.modelId(), startTime, modelProps);
             
         } catch (Exception e) {
-            logger.error("Direct Claude invocation failed after all retries: {}", e.getMessage(), e);
+            logger.error("Direct Claude invocation failed: {}", e.getMessage(), e);
             return ChatResponse.error(
-                "Direct Claude SDK call failed after retries: " + e.getMessage(), 
+                "Direct Claude SDK call failed: " + e.getMessage(), 
                 request.modelId()
             );
         }
     }
 
     /**
-     * Invoke Nova Pro model directly using AWS Bedrock SDK with enhanced error handling
+     * Invoke Nova Pro model directly using raw AWS Bedrock SDK calls
      */
     public ChatResponse invokeNovaProDirect(ChatRequest request) {
-        logger.info("Invoking Nova Pro model directly with enhanced error handling: {}", request.modelId());
+        logger.info("Invoking Nova Pro model directly using raw AWS SDK: {}", request.modelId());
+        long startTime = System.currentTimeMillis();
         
         try {
-            // Use the same error handler for consistency
-            return errorHandler.invokeWithRetry(request);
+            ModelConfig.ModelProperties modelProps = modelConfig.getModels().get(request.modelId());
+            if (modelProps == null) {
+                return ChatResponse.error("Unknown model: " + request.modelId(), request.modelId());
+            }
+            
+            // Build Nova Pro-specific payload
+            Map<String, Object> payload = buildNovaProPayload(request, modelProps);
+            String payloadJson = objectMapper.writeValueAsString(payload);
+            
+            logger.debug("Nova Pro payload: {}", payloadJson);
+            
+            // Direct AWS SDK call
+            InvokeModelRequest invokeRequest = InvokeModelRequest.builder()
+                    .modelId(modelProps.getModelId())
+                    .body(SdkBytes.fromString(payloadJson, StandardCharsets.UTF_8))
+                    .contentType("application/json")
+                    .accept("application/json")
+                    .build();
+            
+            InvokeModelResponse response = bedrockClient.invokeModel(invokeRequest);
+            String responseBody = response.body().asString(StandardCharsets.UTF_8);
+            
+            logger.debug("Nova Pro response: {}", responseBody);
+            
+            return parseNovaProResponse(responseBody, request.modelId(), startTime, modelProps);
             
         } catch (Exception e) {
-            logger.error("Direct Nova Pro invocation failed after all retries: {}", e.getMessage(), e);
+            logger.error("Direct Nova Pro invocation failed: {}", e.getMessage(), e);
             return ChatResponse.error(
-                "Direct Nova Pro SDK call failed after retries: " + e.getMessage(), 
+                "Direct Nova Pro SDK call failed: " + e.getMessage(), 
                 request.modelId()
             );
         }
