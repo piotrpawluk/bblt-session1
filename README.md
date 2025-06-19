@@ -125,6 +125,34 @@ export AWS_PROFILE=bedrock-profile
 - Enable access to **Claude 3.7 Sonnet** and **Claude 4.0 Opus** models in Bedrock console
 - If using SSO, make sure to refresh credentials when they expire: `aws sso login --profile your-profile-name`
 
+#### Required IAM Permissions
+
+Your AWS user/role needs the following IAM policy for Bedrock access:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Action": [
+      "bedrock:InvokeModel",
+      "bedrock:InvokeModelWithResponseStream",
+      "bedrock:ListFoundationModels",
+      "bedrock:GetFoundationModel"
+    ],
+    "Resource": [
+      "arn:aws:bedrock:*::foundation-model/*"
+    ]
+  }]
+}
+```
+
+**Permissions Explained:**
+- `bedrock:InvokeModel` - For standard API requests (required)
+- `bedrock:InvokeModelWithResponseStream` - Enables streaming responses (required for streaming features)
+- `bedrock:ListFoundationModels` - Lets you discover available models (for health checks)
+- `bedrock:GetFoundationModel` - Get model details and capabilities (optional but recommended)
+
 ### 2. Google Vertex AI Setup (Alternative/Additional Provider)
 
 This application also supports Google Vertex AI with Gemini models as an alternative or additional provider to AWS Bedrock.
