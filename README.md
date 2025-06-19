@@ -168,7 +168,7 @@ gcloud config set project your-vertex-project-id
 # Enable Vertex AI API
 gcloud services enable aiplatform.googleapis.com
 
-# Verify access
+# Verify access to Vertex AI models
 gcloud ai models list --region=us-central1
 ```
 
@@ -187,13 +187,17 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/service-account-key.json
 #### Verify Vertex AI Setup
 
 ```bash
-# Test Vertex AI access
-gcloud ai models list --region=us-central1 --filter="displayName:gemini"
+# Test Vertex AI access - list all available models
+gcloud ai models list --region=us-central1
 
-# Test with curl (requires auth token)
+# Test Gemini models specifically (use REST API)
 gcloud auth print-access-token
 curl -H "Authorization: Bearer $(gcloud auth print-access-token)" \
      "https://us-central1-aiplatform.googleapis.com/v1/projects/your-vertex-project-id/locations/us-central1/publishers/google/models"
+
+# Alternative: Test with specific Gemini model
+curl -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+     "https://us-central1-aiplatform.googleapis.com/v1/projects/your-vertex-project-id/locations/us-central1/publishers/google/models/gemini-2.5-flash-preview-05-20"
 ```
 
 #### Vertex AI Configuration in Application
