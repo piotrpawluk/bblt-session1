@@ -15,8 +15,8 @@ spring.ai:
   vertex:
     ai:
       gemini:
-        project-id: ${GOOGLE_VERTEX_PROJECT}
-        location: ${GOOGLE_VERTEX_LOCATION}
+        project-id: ${GOOGLE_VERTEX_PROJECT:drfirst-peerson-playground}
+        location: ${GOOGLE_VERTEX_LOCATION:us-central1}
         chat:
           options:
             model: ${GOOGLE_VERTEX_MODEL_ID:gemini-2.5-flash-preview-05-20}
