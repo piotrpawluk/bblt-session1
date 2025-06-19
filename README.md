@@ -101,7 +101,116 @@ aws configure
 - Enable access to **Claude 3.7 Sonnet** and **Claude 4.0 Opus** models in Bedrock console
 - If using SSO, make sure to refresh credentials when they expire: `aws sso login --profile your-profile-name`
 
-### 2. Clone and Build
+### 2. Google Vertex AI Setup (Alternative/Additional Provider)
+
+This application also supports Google Vertex AI with Gemini models as an alternative or additional provider to AWS Bedrock.
+
+#### Prerequisites for Vertex AI
+- Google Cloud Project with billing enabled
+- Vertex AI API enabled
+- Service account with proper IAM roles
+- Google Cloud CLI (gcloud) installed
+
+#### Option 1: Service Account Key (Recommended for Development)
+
+```bash
+# Install Google Cloud CLI
+# macOS
+brew install google-cloud-sdk
+# or download from https://cloud.google.com/sdk/docs/install
+
+# Authenticate with Google Cloud
+gcloud auth login
+
+# Create a new project (or use existing)
+gcloud projects create your-vertex-project-id
+gcloud config set project your-vertex-project-id
+
+# Enable Vertex AI API
+gcloud services enable aiplatform.googleapis.com
+
+# Create service account
+gcloud iam service-accounts create vertex-ai-service \
+    --description="Service account for Vertex AI integration" \
+    --display-name="Vertex AI Service Account"
+
+# Grant necessary IAM roles
+gcloud projects add-iam-policy-binding your-vertex-project-id \
+    --member="serviceAccount:vertex-ai-service@your-vertex-project-id.iam.gserviceaccount.com" \
+    --role="roles/aiplatform.user"
+
+gcloud projects add-iam-policy-binding your-vertex-project-id \
+    --member="serviceAccount:vertex-ai-service@your-vertex-project-id.iam.gserviceaccount.com" \
+    --role="roles/ml.developer"
+
+# Create and download service account key
+gcloud iam service-accounts keys create ~/vertex-ai-key.json \
+    --iam-account=vertex-ai-service@your-vertex-project-id.iam.gserviceaccount.com
+
+# Set environment variable
+export GOOGLE_APPLICATION_CREDENTIALS=~/vertex-ai-key.json
+export GOOGLE_VERTEX_PROJECT=your-vertex-project-id
+export GOOGLE_VERTEX_LOCATION=us-central1
+```
+
+#### Option 2: Application Default Credentials (ADC)
+
+```bash
+# Install and initialize gcloud CLI
+gcloud init
+
+# Set application default credentials
+gcloud auth application-default login
+
+# Set project
+gcloud config set project your-vertex-project-id
+
+# Enable Vertex AI API
+gcloud services enable aiplatform.googleapis.com
+
+# Verify access
+gcloud ai models list --region=us-central1
+```
+
+#### Option 3: Environment Variables
+
+```bash
+# Set Vertex AI configuration
+export GOOGLE_VERTEX_PROJECT=your-vertex-project-id
+export GOOGLE_VERTEX_LOCATION=us-central1
+export GOOGLE_VERTEX_MODEL_ID=gemini-2.5-flash-preview-05-20
+
+# If using service account key
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/service-account-key.json
+```
+
+#### Verify Vertex AI Setup
+
+```bash
+# Test Vertex AI access
+gcloud ai models list --region=us-central1 --filter="displayName:gemini"
+
+# Test with curl (requires auth token)
+gcloud auth print-access-token
+curl -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+     "https://us-central1-aiplatform.googleapis.com/v1/projects/your-vertex-project-id/locations/us-central1/publishers/google/models"
+```
+
+#### Vertex AI Configuration in Application
+
+The application is already configured to use Vertex AI. Update these environment variables:
+
+```bash
+# Required Vertex AI variables
+export GOOGLE_VERTEX_PROJECT=your-vertex-project-id
+export GOOGLE_VERTEX_LOCATION=us-central1
+export GOOGLE_VERTEX_MODEL_ID=gemini-2.5-flash-preview-05-20
+
+# Optional: Service account key path
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
+```
+
+### 3. Clone and Build
 
 ```bash
 git clone <repository-url>
@@ -152,6 +261,12 @@ The application runs on port **8911** (configurable) and provides these endpoint
 - `POST /api/prompt-engineering/temperature-test` - Temperature effects
 - `POST /api/prompt-engineering/prompt-optimization` - Prompt improvement
 
+### Google Vertex AI / Gemini
+- `POST /api/gemini/chat` - Gemini chat completion
+- `POST /api/gemini/chat/stream` - Streaming Gemini responses
+- `GET /api/gemini/models` - Available Gemini models
+- `POST /api/gemini/compare` - Compare Gemini vs Bedrock models
+
 ## 🛠 CLI Tool Usage
 
 ### Interactive Mode
@@ -197,10 +312,13 @@ java -jar app.jar benchmark --models claude-3-7-sonnet,claude-4-opus
 
 | Model | Provider | Context Window | Cost (per 1K tokens) | Best For |
 |-------|----------|----------------|---------------------|----------|
-| Claude 3.7 Sonnet | Anthropic | 200K | $0.003/$0.015 | Enhanced reasoning |
-| Claude 4.0 Opus | Anthropic | 200K | $0.015/$0.075 | Most capable |
+| Claude 3.7 Sonnet | Anthropic/AWS | 200K | $0.003/$0.015 | Enhanced reasoning |
+| Claude 4.0 Opus | Anthropic/AWS | 200K | $0.015/$0.075 | Most capable |
 | Nova Pro | Amazon | 300K | $0.0008/$0.0032 | AWS native |
-| Gemini 2.5 Flash | Google | 2M | $0.000075/$0.0003 | Ultra-fast |
+| Titan Express | Amazon | 8K | $0.0002/$0.0006 | Cost-effective |
+| Gemini 2.5 Flash | Google/Vertex | 2M | $0.000075/$0.0003 | Ultra-fast, massive context |
+
+**Note:** Costs shown as Input/Output tokens. Vertex AI models may have different pricing in different regions.
 
 ## 🎯 Prompt Engineering Examples
 
@@ -250,6 +368,12 @@ Access metrics at:
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=your_key
 AWS_SECRET_ACCESS_KEY=your_secret
+
+# Google Vertex AI Configuration
+GOOGLE_VERTEX_PROJECT=your-project-id
+GOOGLE_VERTEX_LOCATION=us-central1
+GOOGLE_VERTEX_MODEL_ID=gemini-2.5-flash-preview-05-20
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 
 # Model Configuration
 CLAUDE_MODEL_ID=us.us.anthropic.claude-3-7-sonnet-20250219-v1:0
@@ -313,6 +437,19 @@ POST /api/models/compare?message=Write a haiku about AI&modelIds=claude-3-7-sonn
 curl -N -X POST "http://localhost:8911/api/chat/completion/stream" \
   -H "Content-Type: application/json" \
   -d '{"message": "Tell me a story", "modelId": "claude-3-7-sonnet"}'
+```
+
+### Vertex AI / Gemini Examples
+```bash
+# Gemini chat completion
+curl -X POST "http://localhost:8911/api/gemini/chat" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Explain quantum computing", "temperature": 0.7, "maxTokens": 1000}'
+
+# Compare AWS Bedrock vs Google Vertex AI
+curl -X POST "http://localhost:8911/api/gemini/compare" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Write a haiku about AI", "bedrockModel": "claude-3-7-sonnet"}'
 ```
 
 ## 🚨 Error Handling
@@ -380,17 +517,45 @@ This project is for educational purposes as part of the Week 1 foundation models
    export AWS_SECRET_ACCESS_KEY=your_secret
    ```
 
-2. **Model Not Available**
+2. **Google Cloud Authentication Errors**
+   ```bash
+   # Set service account credentials
+   export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
+   
+   # Or use application default credentials
+   gcloud auth application-default login
+   
+   # Verify project access
+   gcloud projects describe your-project-id
+   ```
+
+3. **Vertex AI API Not Enabled**
+   ```bash
+   gcloud services enable aiplatform.googleapis.com
+   gcloud services list --enabled --filter="name:aiplatform.googleapis.com"
+   ```
+
+4. **Model Not Available**
    - Check AWS Bedrock model access in your region
+   - Verify Vertex AI model availability in your region
    - Verify model IDs in configuration
 
-3. **Port Conflict**
+5. **Vertex AI Quota/Billing Issues**
+   - Check project billing is enabled: `gcloud billing projects describe your-project-id`
+   - Review Vertex AI quotas in Google Cloud Console
+   - Verify service account has `aiplatform.user` and `ml.developer` roles
+
+6. **Port Conflict**
    - Application runs on port 8911 by default
    - Change with `server.port=8912` in application.yml
 
-4. **Memory Issues**
+7. **Memory Issues**
    - Increase JVM heap: `-Xmx2g`
    - Enable streaming for large responses
+
+8. **Region Mismatch**
+   - Ensure Vertex AI location matches your intended region
+   - Some Gemini models are only available in specific regions
 
 ### Support
 
