@@ -73,19 +73,7 @@ export AWS_PROFILE=your-profile-name
 aws bedrock list-foundation-models --region us-east-1 --query 'modelSummaries[?contains(modelId, `claude`)].{ModelId:modelId,ModelName:modelName}' --output table
 ```
 
-#### Option 2: Traditional AWS Credentials
-
-```bash
-# Environment variables
-export AWS_ACCESS_KEY_ID=your_access_key
-export AWS_SECRET_ACCESS_KEY=your_secret_key
-export AWS_REGION=us-east-1
-
-# Or use AWS CLI configure
-aws configure
-```
-
-#### Option 3: AWS CLI with Access Keys
+#### Option 2: AWS CLI with Access Keys
 
 ```bash
 # Configure AWS CLI with access keys
@@ -94,6 +82,11 @@ aws configure
 # AWS Secret Access Key: your_secret_key
 # Default region name: us-east-1
 # Default output format: json
+
+# Alternative: Set via environment variables
+export AWS_ACCESS_KEY_ID=your_access_key
+export AWS_SECRET_ACCESS_KEY=your_secret_key
+export AWS_REGION=us-east-1
 ```
 
 **Important Notes:**
