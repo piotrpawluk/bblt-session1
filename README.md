@@ -89,6 +89,37 @@ export AWS_SECRET_ACCESS_KEY=your_secret_key
 export AWS_REGION=us-east-1
 ```
 
+#### Option 3: AWS Credentials File
+
+```bash
+# Create or edit AWS credentials file
+# Location: ~/.aws/credentials (Linux/macOS) or %USERPROFILE%\.aws\credentials (Windows)
+
+# Default profile
+[default]
+aws_access_key_id = your_access_key
+aws_secret_access_key = your_secret_key
+
+# Named profile (optional)
+[bedrock-profile]
+aws_access_key_id = your_bedrock_access_key
+aws_secret_access_key = your_bedrock_secret_key
+
+# Create or edit AWS config file
+# Location: ~/.aws/config (Linux/macOS) or %USERPROFILE%\.aws\config (Windows)
+
+[default]
+region = us-east-1
+output = json
+
+[profile bedrock-profile]
+region = us-east-1
+output = json
+
+# Use named profile (if created)
+export AWS_PROFILE=bedrock-profile
+```
+
 **Important Notes:**
 - Ensure your AWS account has access to **Amazon Bedrock** service
 - Enable access to **Claude 3.7 Sonnet** and **Claude 4.0 Opus** models in Bedrock console
