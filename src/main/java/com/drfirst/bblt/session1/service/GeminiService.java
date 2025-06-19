@@ -162,8 +162,8 @@ public class GeminiService {
                 "reasoning", true
             ),
             "pricing", Map.of(
-                "input_tokens_per_million", 0.075, // $0.075 per 1M input tokens
-                "output_tokens_per_million", 0.30,  // $0.30 per 1M output tokens
+                "input_tokens_per_million", 0.15, // $0.15 per 1M input tokens
+                "output_tokens_per_million", 0.60,  // $0.60 per 1M output tokens
                 "note", "Pricing for Gemini 2.5 Flash preview"
             ),
             "limits", Map.of(
@@ -212,8 +212,8 @@ public class GeminiService {
      */
     private double calculateGeminiCost(int inputTokens, int outputTokens) {
         // Gemini 2.5 Flash pricing (preview rates)
-        double inputCost = (inputTokens / 1_000_000.0) * 0.075;   // $0.075 per 1M input tokens
-        double outputCost = (outputTokens / 1_000_000.0) * 0.30;  // $0.30 per 1M output tokens
+        double inputCost = (inputTokens / 1_000_000.0) * 0.15;   // $0.15 per 1M input tokens
+        double outputCost = (outputTokens / 1_000_000.0) * 0.60;  // $0.60 per 1M output tokens
         return inputCost + outputCost;
     }
 }

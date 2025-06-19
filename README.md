@@ -382,7 +382,7 @@ java -jar app.jar benchmark --models claude-3-7-sonnet,claude-4-opus
 | Claude 4.0 Opus | Anthropic/AWS | 200K | $0.015/$0.075 | Most capable |
 | Nova Pro | Amazon | 300K | $0.0008/$0.0032 | AWS native |
 | Titan Express | Amazon | 8K | $0.0002/$0.0006 | Cost-effective |
-| Gemini 2.5 Flash | Google/Vertex | 2M | $0.000075/$0.0003 | Ultra-fast, massive context |
+| Gemini 2.5 Flash | Google/Vertex | 2M | $0.00015/$0.0006 | Ultra-fast, massive context |
 
 **Note:** Costs shown as Input/Output tokens. Vertex AI models may have different pricing in different regions.
 

@@ -45,8 +45,8 @@ bedrock:
 
     gemini-2-5-flash:
       model-id: gemini-2.5-flash-preview-05-20
-      cost-per-1k-input-tokens: 0.000075
-      cost-per-1k-output-tokens: 0.0003
+      cost-per-1k-input-tokens: 0.00015
+      cost-per-1k-output-tokens: 0.0006
 
 # Logging Configuration
 logging:
