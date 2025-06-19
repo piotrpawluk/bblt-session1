@@ -8,7 +8,7 @@ import java.util.Map;
 @RestController
 public class ExampleController {
 
-    @GetMapping("/")
+    @GetMapping("/api")
     public Map<String, String> home() {
         return Map.of(
             "message", "Welcome to Spring AI with AWS Bedrock!",

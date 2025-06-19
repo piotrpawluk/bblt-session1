@@ -65,37 +65,6 @@ public class DirectBedrockController {
         }
     }
 
-    @PostMapping(value = "/llama", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(
-        summary = "Chat with Llama using direct AWS Bedrock SDK",
-        description = "Demonstrates direct AWS Bedrock SDK usage for Llama models without Spring AI abstraction. " +
-                     "This endpoint constructs the raw JSON payload according to Meta's Llama format and " +
-                     "manually parses the response, showing the underlying API structure."
-    )
-    public ResponseEntity<ChatResponse> chatWithLlamaDirect(
-            @Valid @RequestBody ChatRequest request) {
-        
-        logger.info("Direct Llama SDK request: model={}, message length={}", 
-                   request.modelId(), request.message().length());
-
-        // Validate that it's a Llama model
-        if (!request.modelId().contains("llama")) {
-            return ResponseEntity.badRequest().body(
-                ChatResponse.error("This endpoint only supports Llama models. Use model ID containing 'llama'.", request.modelId())
-            );
-        }
-
-        ChatResponse response = directBedrockService.invokeLlamaDirect(request);
-        
-        if (response.isSuccess()) {
-            logger.info("Direct Llama SDK success: tokens={}, cost=${}", 
-                       response.metrics().totalTokens(), response.metrics().estimatedCost());
-            return ResponseEntity.ok(response);
-        } else {
-            logger.error("Direct Llama SDK error: {}", response.errorMessage());
-            return ResponseEntity.badRequest().body(response);
-        }
-    }
 
     @GetMapping("/examples")
     @Operation(
@@ -115,20 +84,8 @@ public class DirectBedrockController {
                 "stream", false,
                 "includeMetrics", true
             ),
-            "llama_example", Map.of(
-                "message", "What are the benefits of using direct SDK calls?",
-                "systemPrompt", "You are a technical expert explaining API architectures",
-                "modelId", "llama2-70b",
-                "maxTokens", 800,
-                "temperature", 0.6,
-                "topP", 0.85,
-                "topK", 50,
-                "stream", false,
-                "includeMetrics", true
-            ),
             "endpoints", Map.of(
-                "claude_direct", "/api/direct-bedrock/claude",
-                "llama_direct", "/api/direct-bedrock/llama"
+                "claude_direct", "/api/direct-bedrock/claude"
             ),
             "notes", Map.of(
                 "payload_construction", "These endpoints show how to construct model-specific JSON payloads",
@@ -165,18 +122,6 @@ public class DirectBedrockController {
                 ),
                 "stop_reason", "end_turn",
                 "model", "claude-3-sonnet"
-            ),
-            "llama_payload_format", Map.of(
-                "prompt", "Human: Your message here\\n\\nAssistant:",
-                "max_gen_len", "1000",
-                "temperature", "0.7",
-                "top_p", "0.9"
-            ),
-            "llama_response_format", Map.of(
-                "generation", "Response content from Llama",
-                "prompt_token_count", "25",
-                "generation_token_count", "150",
-                "stop_reason", "stop"
             )
         );
         

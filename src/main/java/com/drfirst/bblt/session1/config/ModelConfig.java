@@ -34,7 +34,7 @@ public class ModelConfig {
         claudeSonnet.setCostPer1kOutputTokens(0.015);
         models.put("claude-3-sonnet", claudeSonnet);
 
-        // Claude 3.5 Sonnet configuration
+        // Claude 3.5 Sonnet configuration (original version)
         ModelProperties claude35Sonnet = new ModelProperties();
         claude35Sonnet.setModelId("anthropic.claude-3-5-sonnet-20240620-v1:0");
         claude35Sonnet.setDisplayName("Claude 3.5 Sonnet");
@@ -45,16 +45,6 @@ public class ModelConfig {
         claude35Sonnet.setCostPer1kOutputTokens(0.015);
         models.put("claude-3-5-sonnet", claude35Sonnet);
 
-        // Llama 2 70B configuration
-        ModelProperties llama2 = new ModelProperties();
-        llama2.setModelId("meta.llama2-70b-chat-v1");
-        llama2.setDisplayName("Llama 2 70B Chat");
-        llama2.setProvider("Meta");
-        llama2.setMaxTokens(2048);
-        llama2.setContextWindow(4096);
-        llama2.setCostPer1kInputTokens(0.00195);
-        llama2.setCostPer1kOutputTokens(0.00256);
-        models.put("llama2-70b", llama2);
 
         // Amazon Titan configuration
         ModelProperties titan = new ModelProperties();
@@ -66,6 +56,17 @@ public class ModelConfig {
         titan.setCostPer1kInputTokens(0.0002);
         titan.setCostPer1kOutputTokens(0.0006);
         models.put("titan-express", titan);
+
+        // Amazon Nova Pro configuration
+        ModelProperties novaPro = new ModelProperties();
+        novaPro.setModelId("amazon.nova-pro-v1:0");
+        novaPro.setDisplayName("Amazon Nova Pro");
+        novaPro.setProvider("Amazon");
+        novaPro.setMaxTokens(5120);
+        novaPro.setContextWindow(300000);
+        novaPro.setCostPer1kInputTokens(0.0008);
+        novaPro.setCostPer1kOutputTokens(0.0032);
+        models.put("nova-pro", novaPro);
     }
 
     public static class ModelProperties {
@@ -81,6 +82,24 @@ public class ModelConfig {
         private int contextWindow = 100000;
         private boolean streamingSupported = true;
         private RateLimits rateLimits = new RateLimits();
+
+        @Override
+        public String toString() {
+            return "ModelProperties{" +
+                    "modelId='" + modelId + '\'' +
+                    ", displayName='" + displayName + '\'' +
+                    ", maxTokens=" + maxTokens +
+                    ", temperature=" + temperature +
+                    ", topP=" + topP +
+                    ", topK=" + topK +
+                    ", provider='" + provider + '\'' +
+                    ", costPer1kInputTokens=" + costPer1kInputTokens +
+                    ", costPer1kOutputTokens=" + costPer1kOutputTokens +
+                    ", contextWindow=" + contextWindow +
+                    ", streamingSupported=" + streamingSupported +
+                    ", rateLimits=" + rateLimits +
+                    '}';
+        }
 
         // Getters and setters
         public String getModelId() {
@@ -198,6 +217,14 @@ public class ModelConfig {
 
         public void setTokensPerMinute(int tokensPerMinute) {
             this.tokensPerMinute = tokensPerMinute;
+        }
+
+        @Override
+        public String toString() {
+            return "RateLimits{" +
+                    "requestsPerMinute=" + requestsPerMinute +
+                    ", tokensPerMinute=" + tokensPerMinute +
+                    '}';
         }
     }
 }

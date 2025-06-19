@@ -39,10 +39,6 @@ bedrock:
       cost-per-1k-input-tokens: 0.003
       cost-per-1k-output-tokens: 0.015
 
-    llama2-70b:
-      model-id: meta.llama2-70b-chat-v1
-      cost-per-1k-input-tokens: 0.00195
-      cost-per-1k-output-tokens: 0.00256
 
     titan-express:
       model-id: amazon.titan-text-express-v1

@@ -45,7 +45,7 @@ public class BedrockService {
             if (modelProps == null) {
                 throw new IllegalArgumentException("Unknown model: " + request.modelId());
             }
-
+            log.info(modelProps.toString());
             ChatClient chatClient = getOrCreateChatClient(request.modelId(), modelProps);
             String promptText = buildPromptText(request);
 
@@ -59,6 +59,7 @@ public class BedrockService {
             return buildChatResponse(request, response, startTime, endTime, requestId);
 
         } catch (Exception e) {
+            e.printStackTrace();
             log.severe("Error processing chat request: " + e.getMessage());
             return ChatResponse.error(e.getMessage(), request.modelId());
         }
@@ -228,7 +229,7 @@ public class BedrockService {
     }
 
     public List<String> getAvailableModels() {
-        return List.of("claude-3-sonnet", "claude-3-5-sonnet", "llama2-70b", "titan-express");
+        return List.of("claude-3-sonnet", "claude-3-5-sonnet", "nova-pro", "titan-express");
     }
 
 }

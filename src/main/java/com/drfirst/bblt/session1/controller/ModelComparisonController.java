@@ -1,7 +1,9 @@
 package com.drfirst.bblt.session1.controller;
 
+import com.drfirst.bblt.session1.model.ChatRequest;
 import com.drfirst.bblt.session1.model.ChatResponse;
 import com.drfirst.bblt.session1.service.BedrockService;
+import com.drfirst.bblt.session1.service.GeminiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,19 +18,21 @@ public class ModelComparisonController {
 
     private static final Logger log = Logger.getLogger(ModelComparisonController.class.getName());
     private final BedrockService bedrockService;
+    private final GeminiService geminiService;
 
-    public ModelComparisonController(BedrockService bedrockService) {
+    public ModelComparisonController(BedrockService bedrockService, GeminiService geminiService) {
         this.bedrockService = bedrockService;
+        this.geminiService = geminiService;
     }
 
     @PostMapping("/compare")
     public CompletableFuture<ResponseEntity<Map<String, Object>>> compareModels(
             @RequestParam String message,
-            @RequestParam(defaultValue = "claude-3-sonnet,claude-3-5-sonnet,llama2-70b") List<String> modelIds) {
+            @RequestParam(defaultValue = "claude-3-sonnet,claude-3-5-sonnet,nova-pro,gemini-2.5-flash") List<String> modelIds) {
         
         log.info("Comparing models: " + modelIds + " with message: " + message);
         
-        return bedrockService.compareModels(message, modelIds)
+        return compareAllModels(message, modelIds)
                 .thenApply(metrics -> {
                     // Sort by response time for easy comparison
                     List<ChatResponse.ModelPerformanceMetrics> sortedMetrics = metrics.stream()
@@ -54,7 +58,7 @@ public class ModelComparisonController {
 
     @PostMapping("/benchmark")
     public CompletableFuture<ResponseEntity<Map<String, Object>>> benchmarkModels(
-            @RequestParam(defaultValue = "claude-3-sonnet,claude-3-5-sonnet,llama2-70b") List<String> modelIds) {
+            @RequestParam(defaultValue = "claude-3-sonnet,claude-3-5-sonnet,nova-pro,gemini-2.5-flash") List<String> modelIds) {
         
         log.info("Benchmarking models: " + modelIds);
         
@@ -67,7 +71,7 @@ public class ModelComparisonController {
         );
         
         List<CompletableFuture<List<ChatResponse.ModelPerformanceMetrics>>> futures = benchmarkPrompts.stream()
-                .map(prompt -> bedrockService.compareModels(prompt, modelIds))
+                .map(prompt -> compareAllModels(prompt, modelIds))
                 .toList();
         
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
@@ -105,12 +109,48 @@ public class ModelComparisonController {
                 "recommendedUses", Map.of(
                         "claude-3-sonnet", "General purpose, balanced performance",
                         "claude-3-5-sonnet", "Latest features, improved reasoning",
-                        "llama2-70b", "Cost-effective, good for simple tasks",
-                        "titan-express", "Fast responses, AWS native"
+                        "nova-pro", "AWS native, high context window",
+                        "titan-express", "Fast responses, AWS native",
+                        "gemini-2.5-flash", "Google AI, ultra-fast, 2M token context"
                 )
         );
         
         return ResponseEntity.ok(summary);
+    }
+
+    private CompletableFuture<List<ChatResponse.ModelPerformanceMetrics>> compareAllModels(String message, List<String> modelIds) {
+        log.info("Comparing all models (Bedrock + Gemini): " + modelIds + " with message: " + message);
+
+        List<CompletableFuture<ChatResponse.ModelPerformanceMetrics>> futures = modelIds.stream()
+                .map(modelId -> CompletableFuture.supplyAsync(() -> {
+                    ChatRequest request = new ChatRequest(
+                            message, null, modelId, 1000, 0.7, 0.9, 40, false, true
+                    );
+
+                    ChatResponse response;
+                    if (modelId.startsWith("gemini")) {
+                        // Use GeminiService for Gemini models
+                        response = geminiService.chatCompletion(request);
+                    } else {
+                        // Use BedrockService for AWS Bedrock models
+                        response = bedrockService.processChat(request);
+                    }
+
+                    if (response.metrics() != null) {
+                        return response.metrics();
+                    } else {
+                        // Create default metrics if none provided
+                        return ChatResponse.ModelPerformanceMetrics.create(
+                                modelId, 0, 0, 0, 0.0, "unknown"
+                        );
+                    }
+                }))
+                .toList();
+
+        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                .thenApply(v -> futures.stream()
+                        .map(CompletableFuture::join)
+                        .toList());
     }
 
     private Map<String, Object> generateComparisonSummary(List<ChatResponse.ModelPerformanceMetrics> metrics) {
@@ -170,7 +210,7 @@ public class ModelComparisonController {
         return allResults.stream()
                 .flatMap(List::stream)
                 .collect(java.util.stream.Collectors.groupingBy(
-                        m -> "Model",
+                        ChatResponse.ModelPerformanceMetrics::modelId,
                         java.util.stream.Collectors.averagingLong(ChatResponse.ModelPerformanceMetrics::responseTimeMs)
                 ));
     }
@@ -179,7 +219,7 @@ public class ModelComparisonController {
         return allResults.stream()
                 .flatMap(List::stream)
                 .collect(java.util.stream.Collectors.groupingBy(
-                        m -> "Model",
+                        ChatResponse.ModelPerformanceMetrics::modelId,
                         java.util.stream.Collectors.averagingDouble(ChatResponse.ModelPerformanceMetrics::estimatedCost)
                 ));
     }
@@ -188,7 +228,7 @@ public class ModelComparisonController {
         return allResults.stream()
                 .flatMap(List::stream)
                 .collect(java.util.stream.Collectors.groupingBy(
-                        m -> "Model",
+                        ChatResponse.ModelPerformanceMetrics::modelId,
                         java.util.stream.Collectors.averagingInt(ChatResponse.ModelPerformanceMetrics::outputTokens)
                 )).entrySet().stream()
                 .collect(java.util.stream.Collectors.toMap(

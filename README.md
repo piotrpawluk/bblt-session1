@@ -131,7 +131,7 @@ java -jar app.jar recipe "chicken, rice, vegetables"
 java -jar app.jar story sci-fi "AI consciousness"
 
 # Model benchmarking
-java -jar app.jar benchmark --models claude-3-sonnet,llama2-70b
+java -jar app.jar benchmark --models claude-3-sonnet,llama3-70b
 ```
 
 ### CLI Options
@@ -203,7 +203,7 @@ AWS_SECRET_ACCESS_KEY=your_secret
 
 # Model Configuration
 CLAUDE_MODEL_ID=anthropic.claude-3-sonnet-20240229-v1:0
-LLAMA_MODEL_ID=meta.llama2-70b-chat-v1
+LLAMA_MODEL_ID=meta.llama3-70b-instruct-v1:0
 TITAN_MODEL_ID=amazon.titan-text-express-v1
 
 # Application Configuration
@@ -255,7 +255,7 @@ POST /api/chat/completion
 
 ### Model Comparison
 ```bash
-POST /api/models/compare?message=Write a haiku about AI&modelIds=claude-3-sonnet,claude-3-5-sonnet,llama2-70b
+POST /api/models/compare?message=Write a haiku about AI&modelIds=claude-3-sonnet,claude-3-5-sonnet,llama3-70b
 ```
 
 ### Streaming Response
@@ -284,7 +284,7 @@ Run benchmarks to compare models:
 curl -X POST "http://localhost:8911/api/models/benchmark"
 
 # Custom benchmark
-curl -X POST "http://localhost:8911/api/models/benchmark?modelIds=claude-3-sonnet,llama2-70b"
+curl -X POST "http://localhost:8911/api/models/benchmark?modelIds=claude-3-sonnet,llama3-70b"
 ```
 
 Sample benchmark output:

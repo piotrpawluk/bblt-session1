@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1 Foundation Models Demo - AWS Bedrock & Gemini</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+        }
+        .hero-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            color: white;
+        }
+        .model-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .model-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .btn-custom {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        .model-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 0.25rem;
+        }
+        .badge-aws { background: #ff9500; color: white; }
+        .badge-anthropic { background: #d4af37; color: white; }
+        .badge-meta { background: #1877f2; color: white; }
+        .badge-amazon { background: #232f3e; color: white; }
+        .badge-google { background: #4285f4; color: white; }
+        .response-area {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            min-height: 200px;
+            border: 1px solid #dee2e6;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner-border {
+            color: #667eea;
+        }
+        .metrics-card {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+        }
+        .prompt-template {
+            background: #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-brain text-primary"></i> Week 1 Foundation Models Demo
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/swagger-ui.html" target="_blank">
+                    <i class="fas fa-code"></i> API Docs
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 pt-5">
+        <!-- Hero Section -->
+        <div class="hero-section text-center">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="fas fa-robot"></i> Foundation Models Integration Demo
+            </h1>
+            <p class="lead">
+                Comprehensive demonstration of AWS Bedrock and Google Vertex AI Gemini integration
+                using Spring AI framework and direct SDK approaches
+            </p>
+            <div class="row mt-4">
+                <div class="col-md-3">
+                    <div class="model-badge badge-aws">AWS Bedrock</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="model-badge badge-google">Google Gemini</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="model-badge badge-anthropic">Spring AI</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="model-badge badge-meta">Direct SDK</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week 1 Goals Section -->
+        <div class="feature-section">
+            <h2 class="text-center mb-4"><i class="fas fa-target"></i> Week 1 Goals</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-check-circle text-success"></i> Architecture Understanding</h5>
+                    <ul>
+                        <li>AWS Bedrock setup and configuration</li>
+                        <li>Foundation models comparison</li>
+                        <li>API authentication patterns</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5><i class="fas fa-check-circle text-success"></i> Practical Implementation</h5>
+                    <ul>
+                        <li>First LLM API calls to Claude 3.5 & 4.0</li>
+                        <li>Prompt engineering techniques</li>
+                        <li>Performance monitoring & cost analysis</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Models Section -->
+        <div class="feature-section">
+            <h2 class="text-center mb-4"><i class="fas fa-layer-group"></i> Available Foundation Models</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="model-card">
+                        <h5><span class="badge-anthropic model-badge">Anthropic Claude 3.5 Sonnet</span></h5>
+                        <p><strong>Context:</strong> 200K tokens | <strong>Cost:</strong> $0.003/$0.015 per 1K tokens</p>
+                        <p>Latest Anthropic model with enhanced reasoning and code capabilities</p>
+                        <button class="btn btn-custom btn-sm" onclick="testModel('claude-3-5-sonnet')">
+                            <i class="fas fa-play"></i> Test Model
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="model-card">
+                        <h5><span class="badge-anthropic model-badge">Anthropic Claude 3 Sonnet</span></h5>
+                        <p><strong>Context:</strong> 200K tokens | <strong>Cost:</strong> $0.003/$0.015 per 1K tokens</p>
+                        <p>Balanced model for general-purpose tasks and analysis</p>
+                        <button class="btn btn-custom btn-sm" onclick="testModel('claude-3-sonnet')">
+                            <i class="fas fa-play"></i> Test Model
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="model-card">
+                        <h5><span class="badge-google model-badge">Google Gemini 2.5 Flash</span></h5>
+                        <p><strong>Context:</strong> 2M tokens | <strong>Cost:</strong> $0.000075/$0.0003 per 1K tokens</p>
+                        <p>Google's latest high-speed model with massive context window</p>
+                        <button class="btn btn-custom btn-sm" onclick="testModel('gemini-2-5-flash')">
+                            <i class="fas fa-play"></i> Test Model
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Demo Section -->
+        <div class="feature-section">
+            <h2 class="text-center mb-4"><i class="fas fa-terminal"></i> Interactive Model Testing</h2>
+            
+            <!-- Model Selection -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Select Model:</label>
+                    <select class="form-select" id="modelSelect">
+                        <option value="claude-3-5-sonnet">Claude 3.5 Sonnet (Spring AI)</option>
+                        <option value="claude-3-sonnet">Claude 3 Sonnet (Spring AI)</option>
+                        <option value="nova-pro">Nova Pro (Spring AI)</option>
+                        <option value="gemini-2.5-flash">Gemini 2.5 Flash (Spring AI)</option>
+                        <option value="claude-direct">Claude 3.5 Sonnet (Direct SDK)</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Temperature (0.0 - 1.0):</label>
+                    <input type="range" class="form-range" id="temperatureRange" min="0" max="1" step="0.1" value="0.7">
+                    <small class="text-muted">Current: <span id="temperatureValue">0.7</span></small>
+                </div>
+            </div>
+
+            <!-- Advanced Parameters -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Top P (0.0 - 1.0):</label>
+                    <input type="range" class="form-range" id="topPRange" min="0" max="1" step="0.1" value="0.9">
+                    <small class="text-muted">Current: <span id="topPValue">0.9</span></small>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="mb-3">
+                <label class="form-label">Your Message:</label>
+                <textarea class="form-control" id="chatInput" rows="3" placeholder="Enter your message here...">Explain quantum computing in simple terms</textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="row mb-3">
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-custom me-2" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                    <button class="btn btn-custom me-2" onclick="compareModels()">
+                        <i class="fas fa-balance-scale"></i> Compare All Models
+                    </button>
+                    <button class="btn btn-custom me-2" onclick="streamResponse()">
+                        <i class="fas fa-stream"></i> Stream Response
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="clearResponse()">
+                        <i class="fas fa-eraser"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Response Area -->
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner-border" role="status"></div>
+                <p class="mt-2">Processing your request...</p>
+            </div>
+            
+            <div id="responseArea" class="response-area">
+                Ready to test foundation models...
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="row mt-3" id="metricsSection" style="display: none;">
+                <div class="col-md-3">
+                    <div class="metrics-card text-center">
+                        <h6>Response Time</h6>
+                        <h4 id="responseTime">-</h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metrics-card text-center">
+                        <h6>Input Tokens</h6>
+                        <h4 id="inputTokens">-</h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metrics-card text-center">
+                        <h6>Output Tokens</h6>
+                        <h4 id="outputTokens">-</h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metrics-card text-center">
+                        <h6>Est. Cost</h6>
+                        <h4 id="estimatedCost">-</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prompt Engineering Section -->
+        <div class="feature-section">
+            <h2 class="text-center mb-4"><i class="fas fa-magic"></i> Prompt Engineering Techniques</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-brain"></i> Few-Shot Learning</h5>
+                    <div class="prompt-template">
+                        <strong>Example:</strong> Sentiment Analysis<br>
+                        <em>"This movie was amazing!" → Positive<br>
+                        "I didn't like it." → Negative<br>
+                        "It was okay." → Neutral<br>
+                        "Best film ever!" → ?</em>
+                    </div>
+                    <button class="btn btn-custom btn-sm" onclick="testFewShot()">
+                        <i class="fas fa-play"></i> Test Few-Shot
+                    </button>
+                </div>
+                
+                <div class="col-md-6">
+                    <h5><i class="fas fa-link"></i> Chain of Thought</h5>
+                    <div class="prompt-template">
+                        <strong>Example:</strong> Mathematical Reasoning<br>
+                        <em>"Let's solve this step by step:
+                        1. First, I'll identify the known values
+                        2. Then apply the relevant formula
+                        3. Finally, calculate the result"</em>
+                    </div>
+                    <button class="btn btn-custom btn-sm" onclick="testChainOfThought()">
+                        <i class="fas fa-play"></i> Test Chain of Thought
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Creative Use Cases Section -->
+        <div class="feature-section">
+            <h2 class="text-center mb-4"><i class="fas fa-lightbulb"></i> Creative Use Cases (Homework Assignment)</h2>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="model-card text-center">
+                        <h5><i class="fas fa-code"></i> Code Reviewer</h5>
+                        <p>AI-powered code analysis and improvement suggestions</p>
+                        <textarea class="form-control mb-2" id="codeInput" rows="3" placeholder="Paste your code here...">public class Example {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}</textarea>
+                        <button class="btn btn-custom btn-sm" onclick="reviewCode()">
+                            <i class="fas fa-search"></i> Review Code
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="model-card text-center">
+                        <h5><i class="fas fa-utensils"></i> Recipe Generator</h5>
+                        <p>Create recipes from available ingredients</p>
+                        <input type="text" class="form-control mb-2" id="ingredientsInput" placeholder="chicken, rice, vegetables">
+                        <button class="btn btn-custom btn-sm" onclick="generateRecipe()">
+                            <i class="fas fa-chef-hat"></i> Generate Recipe
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="model-card text-center">
+                        <h5><i class="fas fa-book"></i> Story Writer</h5>
+                        <p>Creative story generation with themes</p>
+                        <input type="text" class="form-control mb-2" id="storyThemeInput" placeholder="sci-fi adventure">
+                        <button class="btn btn-custom btn-sm" onclick="writeStory()">
+                            <i class="fas fa-pen"></i> Write Story
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Comparison Section -->
+        <div class="feature-section">
+            <h2 class="text-center mb-4"><i class="fas fa-chart-bar"></i> Model Performance Comparison</h2>
+            <div class="text-center">
+                <button class="btn btn-custom me-2" onclick="runBenchmark()">
+                    <i class="fas fa-stopwatch"></i> Run Performance Benchmark
+                </button>
+                <button class="btn btn-outline-primary" onclick="showModelComparison()">
+                    <i class="fas fa-table"></i> View Detailed Comparison
+                </button>
+            </div>
+            <div id="benchmarkResults" class="mt-3" style="display: none;">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Response Time (ms)</th>
+                                <th>Tokens/Second</th>
+                                <th>Cost per 1K tokens</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody id="benchmarkTableBody">
+                            <!-- Results will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Update temperature display
+        document.getElementById('temperatureRange').addEventListener('input', function() {
+            document.getElementById('temperatureValue').textContent = this.value;
+        });
+
+        // Update topP display
+        document.getElementById('topPRange').addEventListener('input', function() {
+            document.getElementById('topPValue').textContent = this.value;
+        });
+
+        // Show loading indicator
+        function showLoading() {
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('responseArea').style.display = 'none';
+        }
+
+        // Hide loading indicator
+        function hideLoading() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('responseArea').style.display = 'block';
+        }
+
+        // Update response area
+        function updateResponse(text, metrics = null) {
+            document.getElementById('responseArea').textContent = text;
+            
+            if (metrics) {
+                document.getElementById('metricsSection').style.display = 'block';
+                document.getElementById('responseTime').textContent = (metrics.responseTimeMs || metrics.responseTime || 0) + 'ms';
+                document.getElementById('inputTokens').textContent = metrics.inputTokens || '-';
+                document.getElementById('outputTokens').textContent = metrics.outputTokens || '-';
+                document.getElementById('estimatedCost').textContent = metrics.estimatedCost ? '$' + metrics.estimatedCost.toFixed(6) : '-';
+            }
+        }
+
+        // Clear response
+        function clearResponse() {
+            document.getElementById('responseArea').textContent = 'Ready to test foundation models...';
+            document.getElementById('metricsSection').style.display = 'none';
+        }
+
+        // Send message to selected model
+        async function sendMessage() {
+            const model = document.getElementById('modelSelect').value;
+            const message = document.getElementById('chatInput').value;
+            const temperature = document.getElementById('temperatureRange').value;
+            const topP = document.getElementById('topPRange').value;
+
+            if (!message.trim()) {
+                alert('Please enter a message');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                let response;
+                
+                if (model.startsWith('gemini')) {
+                    // Gemini API call
+                    response = await fetch('/api/gemini/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            temperature: parseFloat(temperature),
+                            topP: parseFloat(topP)
+                        })
+                    });
+                } else if (model.includes('direct')) {
+                    // Direct SDK calls
+                    const endpoint = '/api/direct-bedrock/claude';
+                    response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            temperature: parseFloat(temperature),
+                            topP: parseFloat(topP),
+                            maxTokens: 1000
+                        })
+                    });
+                } else {
+                    // Spring AI Bedrock calls
+                    response = await fetch('/api/chat/completion/detailed', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            modelId: model,
+                            temperature: parseFloat(temperature),
+                            topP: parseFloat(topP),
+                            maxTokens: 1000,
+                            includeMetrics: true
+                        })
+                    });
+                }
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateResponse(data.content || data.response || data.message || 'No content received', data.metrics);
+                } else {
+                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to get response'}`);
+                }
+            } catch (error) {
+                updateResponse(`Error: ${error.message}`);
+            }
+
+            hideLoading();
+        }
+
+        // Compare all models
+        async function compareModels() {
+            const message = document.getElementById('chatInput').value;
+            
+            if (!message.trim()) {
+                alert('Please enter a message to compare');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const response = await fetch(`/api/models/compare?message=${encodeURIComponent(message)}&modelIds=claude-3-5-sonnet,claude-3-sonnet,nova-pro,gemini-2.5-flash`, {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let comparisonText = 'MODEL COMPARISON RESULTS:\n\n';
+                    if (data.results && Array.isArray(data.results)) {
+                        data.results.forEach(result => {
+                            comparisonText += `=== ${result.modelId} ===\n`;
+                            comparisonText += `Response Time: ${result.responseTimeMs}ms\n`;
+                            comparisonText += `Tokens: ${result.inputTokens} input, ${result.outputTokens} output (${result.totalTokens} total)\n`;
+                            comparisonText += `Cost: $${result.estimatedCost.toFixed(6)}\n`;
+                            comparisonText += `Speed: ${result.tokensPerSecond.toFixed(2)} tokens/sec\n\n`;
+                        });
+                    } else {
+                        comparisonText += 'No comparison results available\n';
+                        comparisonText += 'Response structure: ' + JSON.stringify(data, null, 2);
+                    }
+                    updateResponse(comparisonText);
+                } else {
+                    updateResponse(`Error: ${data.error || 'Failed to compare models'}`);
+                }
+            } catch (error) {
+                updateResponse(`Error: ${error.message}`);
+            }
+
+            hideLoading();
+        }
+
+        // Stream response
+        async function streamResponse() {
+            const model = document.getElementById('modelSelect').value;
+            const message = document.getElementById('chatInput').value;
+            const temperature = document.getElementById('temperatureRange').value;
+            const topP = document.getElementById('topPRange').value;
+            
+            if (!message.trim()) {
+                alert('Please enter a message');
+                return;
+            }
+
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/chat/completion/stream', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        modelId: model || 'claude-3-sonnet',
+                        temperature: parseFloat(temperature),
+                        topP: parseFloat(topP)
+                    })
+                });
+
+                hideLoading();
+                
+                if (response.ok) {
+                    const reader = response.body.getReader();
+                    const responseArea = document.getElementById('responseArea');
+                    responseArea.textContent = '';
+                    
+                    let buffer = '';
+                    
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        
+                        const chunk = new TextDecoder().decode(value);
+                        buffer += chunk;
+                        
+                        // Process complete lines
+                        const lines = buffer.split('\n');
+                        buffer = lines.pop(); // Keep incomplete line in buffer
+                        
+                        for (const line of lines) {
+                            if (line.startsWith('data:')) {
+                                const content = line.substring(5); // Remove 'data:' prefix
+                                responseArea.textContent += content;
+                            }
+                        }
+                    }
+                    
+                    // Process any remaining content in buffer
+                    if (buffer && buffer.startsWith('data:')) {
+                        const content = buffer.substring(5);
+                        responseArea.textContent += content;
+                    }
+                } else {
+                    updateResponse('Error: Failed to stream response');
+                }
+            } catch (error) {
+                hideLoading();
+                updateResponse(`Error: ${error.message}`);
+            }
+        }
+
+        // Test specific model
+        async function testModel(modelId) {
+            document.getElementById('modelSelect').value = modelId;
+            document.getElementById('chatInput').value = 'Hello! Please introduce yourself and explain your capabilities.';
+            await sendMessage();
+        }
+
+        // Test few-shot learning
+        async function testFewShot() {
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/prompt-engineering/few-shot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: 'This product exceeded my expectations!',
+                        domain: 'sentiment',
+                        modelId: 'claude-3-sonnet'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateResponse(`Few-Shot Learning Result:\n\n${data.content || data.response || 'No content received'}`);
+                } else {
+                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to test few-shot learning'}`);
+                }
+            } catch (error) {
+                updateResponse(`Error: ${error.message}`);
+            }
+
+            hideLoading();
+        }
+
+        // Test chain of thought
+        async function testChainOfThought() {
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/prompt-engineering/chain-of-thought', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        problem: 'If a train travels 120 miles in 2 hours, what is its average speed?',
+                        modelId: 'claude-3-sonnet'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateResponse(`Chain of Thought Result:\n\n${data.content || data.response || 'No content received'}`);
+                } else {
+                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to test chain of thought'}`);
+                }
+            } catch (error) {
+                updateResponse(`Error: ${error.message}`);
+            }
+
+            hideLoading();
+        }
+
+        // Review code
+        async function reviewCode() {
+            const code = document.getElementById('codeInput').value;
+            
+            if (!code.trim()) {
+                alert('Please enter code to review');
+                return;
+            }
+
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/prompt-engineering/code-review', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        language: 'Java',
+                        modelId: 'claude-3-5-sonnet'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateResponse(`Code Review Results:\n\n${data.content || data.response || 'No content received'}`);
+                } else {
+                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to review code'}`);
+                }
+            } catch (error) {
+                updateResponse(`Error: ${error.message}`);
+            }
+
+            hideLoading();
+        }
+
+        // Generate recipe
+        async function generateRecipe() {
+            const ingredients = document.getElementById('ingredientsInput').value;
+            
+            if (!ingredients.trim()) {
+                alert('Please enter ingredients');
+                return;
+            }
+
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/prompt-engineering/recipe-generator', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        ingredients: ingredients,
+                        modelId: 'claude-3-sonnet'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateResponse(`Generated Recipe:\n\n${data.content || data.response || 'No content received'}`);
+                } else {
+                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to generate recipe'}`);
+                }
+            } catch (error) {
+                updateResponse(`Error: ${error.message}`);
+            }
+
+            hideLoading();
+        }
+
+        // Write story
+        async function writeStory() {
+            const theme = document.getElementById('storyThemeInput').value;
+            
+            if (!theme.trim()) {
+                alert('Please enter a story theme');
+                return;
+            }
+
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/prompt-engineering/story-writer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        theme: theme,
+                        length: 'short',
+                        modelId: 'claude-3-5-sonnet'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateResponse(`Generated Story:\n\n${data.content || data.response || 'No content received'}`);
+                } else {
+                    updateResponse(`Error: ${data.errorMessage || data.error || 'Failed to write story'}`);
+                }
+            } catch (error) {
+                updateResponse(`Error: ${error.message}`);
+            }
+
+            hideLoading();
+        }
+
+        // Run benchmark
+        async function runBenchmark() {
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/models/benchmark?modelIds=claude-3-5-sonnet,claude-3-sonnet,nova-pro,gemini-2.5-flash', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('benchmarkResults').style.display = 'block';
+                    const tbody = document.getElementById('benchmarkTableBody');
+                    tbody.innerHTML = '';
+                    
+                    // Extract model names from averageResponseTimes keys
+                    const modelNames = Object.keys(data.averageResponseTimes || {});
+
+                    modelNames.forEach(modelId => {
+                        const row = tbody.insertRow();
+                        const avgResponseTime = data.averageResponseTimes[modelId] || 0;
+                        const avgCost = data.averageCosts[modelId] || 0;
+                        const avgTokens = data.averageOutputTokens[modelId] || 0;
+                        const tokensPerSecond = avgResponseTime > 0 ? (avgTokens / (avgResponseTime / 1000)) : 0;
+                        console.log(JSON.stringify(data.recommendations));
+                        
+                        row.innerHTML = `
+                            <td>${modelId}</td>
+                            <td>${Math.round(avgResponseTime)}</td>
+                            <td>${tokensPerSecond.toFixed(2)}</td>
+                            <td>$${avgCost.toFixed(6)}</td>
+                        `;
+                    });
+                    
+                    let benchmarkText = `Benchmark completed!\n\n`;
+                    benchmarkText += `Total tests: ${data.totalTests || 0}\n`;
+                    benchmarkText += `Models tested: ${modelNames.length}\n\n`;
+                    benchmarkText += `See detailed results in the table below.\n\n`;
+                    
+                    // Add recommendations if available
+                    if (data.recommendations) {
+                        benchmarkText += `RECOMMENDATIONS:\n`;
+                        benchmarkText += `💰 ${data.recommendations.cost || 'N/A'}\n`;
+                        benchmarkText += `⚡ ${data.recommendations.speed || 'N/A'}\n`;
+                        benchmarkText += `📝 ${data.recommendations.detail || 'N/A'}\n`;
+                        benchmarkText += `🎯 ${data.recommendations.general || 'N/A'}\n`;
+                    }
+                    
+                    updateResponse(benchmarkText);
+                } else {
+                    updateResponse(`Error: ${data.error || 'Failed to run benchmark'}`);
+                }
+            } catch (error) {
+                updateResponse(`Error: ${error.message}`);
+            }
+
+            hideLoading();
+        }
+
+        // Show model comparison table
+        function showModelComparison() {
+            const comparisonData = `
+MODEL COMPARISON TABLE:
+
+┌─────────────────────┬─────────────┬────────────┬──────────────┬─────────────────┐
+│ Model               │ Context Win │ Cost (I/O) │ Speed        │ Best Use Case   │
+├─────────────────────┼─────────────┼────────────┼──────────────┼─────────────────┤
+│ Claude 3.5 Sonnet   │ 200K tokens │ $3/$15     │ Very Fast    │ Code & Analysis │
+│ Claude 3 Sonnet     │ 200K tokens │ $3/$15     │ Fast         │ General Purpose │
+│ Nova Pro            │ 300K tokens │ $0.8/$3.2  │ Fast         │ AWS Native      │
+│ Gemini 2.5 Flash    │ 1M tokens   │ $0.15/$0.6 │ Ultra Fast   │ Large Context   │
+│ Titan Express       │ 8K tokens   │ $0.2/$0.6  │ Fast         │ Quick Tasks     │
+└─────────────────────┴─────────────┴────────────┴──────────────┴─────────────────┘
+
+* Costs shown per 1K tokens (Input/Output)
+* Speed relative to response generation
+* Context Window = Maximum input size
+            `;
+            updateResponse(comparisonData);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Week 1 Foundation Models Demo loaded successfully!');
+        });
+    </script>
+</body>
+</html>

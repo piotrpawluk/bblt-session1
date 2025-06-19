@@ -1,7 +1,6 @@
 package com.drfirst.bblt.session1.controller;
 
-import com.drfirst.bblt.session1.model.ChatRequest;
-import com.drfirst.bblt.session1.model.ChatResponse;
+import com.drfirst.bblt.session1.model.*;
 import com.drfirst.bblt.session1.service.PromptEngineeringService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,63 +25,47 @@ public class PromptEngineeringController {
     }
 
     @PostMapping("/few-shot")
-    public ResponseEntity<ChatResponse> fewShotLearning(
-            @RequestParam String query,
-            @RequestParam String domain,
-            @RequestParam(defaultValue = "claude-3-sonnet") String modelId) {
+    public ResponseEntity<ChatResponse> fewShotLearning(@RequestBody FewShotRequest request) {
         
-        log.info("Processing few-shot learning request for domain: " + domain + " with model: " + modelId);
+        log.info("Processing few-shot learning request for domain: " + request.getDomain() + " with model: " + request.getModelId());
         
-        ChatResponse response = promptEngineeringService.processFewShotLearning(query, domain, modelId);
+        ChatResponse response = promptEngineeringService.processFewShotLearning(request.getQuery(), request.getDomain(), request.getModelId());
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/chain-of-thought")
-    public ResponseEntity<ChatResponse> chainOfThought(
-            @RequestParam String problem,
-            @RequestParam(defaultValue = "claude-3-sonnet") String modelId) {
+    public ResponseEntity<ChatResponse> chainOfThought(@RequestBody ChainOfThoughtRequest request) {
         
-        log.info("Processing chain of thought request with model: " + modelId);
+        log.info("Processing chain of thought request with model: " + request.getModelId());
         
-        ChatResponse response = promptEngineeringService.processChainOfThought(problem, modelId);
+        ChatResponse response = promptEngineeringService.processChainOfThought(request.getProblem(), request.getModelId());
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/code-review")
-    public ResponseEntity<ChatResponse> codeReview(
-            @RequestParam String code,
-            @RequestParam String language,
-            @RequestParam(defaultValue = "claude-3-sonnet") String modelId) {
+    public ResponseEntity<ChatResponse> codeReview(@RequestBody CodeReviewRequest request) {
         
-        log.info("Processing code review request for " + language + " with model: " + modelId);
+        log.info("Processing code review request for " + request.getLanguage() + " with model: " + request.getModelId());
         
-        ChatResponse response = promptEngineeringService.processCodeReview(code, language, modelId);
+        ChatResponse response = promptEngineeringService.processCodeReview(request.getCode(), request.getLanguage(), request.getModelId());
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/recipe-generator")
-    public ResponseEntity<ChatResponse> generateRecipe(
-            @RequestParam String ingredients,
-            @RequestParam(defaultValue = "Italian") String cuisine,
-            @RequestParam(defaultValue = "") String dietaryRestrictions,
-            @RequestParam(defaultValue = "claude-3-sonnet") String modelId) {
+    public ResponseEntity<ChatResponse> generateRecipe(@RequestBody RecipeRequest request) {
         
-        log.info("Generating " + cuisine + " recipe with model: " + modelId);
+        log.info("Generating " + request.getCuisine() + " recipe with model: " + request.getModelId());
         
-        ChatResponse response = promptEngineeringService.generateRecipe(ingredients, cuisine, dietaryRestrictions, modelId);
+        ChatResponse response = promptEngineeringService.generateRecipe(request.getIngredients(), request.getCuisine(), request.getDietaryRestrictions(), request.getModelId());
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/story-writer")
-    public ResponseEntity<ChatResponse> writeStory(
-            @RequestParam String genre,
-            @RequestParam String theme,
-            @RequestParam String characters,
-            @RequestParam(defaultValue = "claude-3-sonnet") String modelId) {
+    public ResponseEntity<ChatResponse> writeStory(@RequestBody StoryRequest request) {
         
-        log.info("Writing " + genre + " story with theme: " + theme + " using model: " + modelId);
+        log.info("Writing " + request.getGenre() + " story with theme: " + request.getTheme() + " using model: " + request.getModelId());
         
-        ChatResponse response = promptEngineeringService.writeStory(genre, theme, characters, modelId);
+        ChatResponse response = promptEngineeringService.writeStory(request.getGenre(), request.getTheme(), request.getCharacters(), request.getModelId());
         return ResponseEntity.ok(response);
     }
 
