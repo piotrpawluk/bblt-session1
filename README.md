@@ -227,22 +227,22 @@ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 ### 3. Clone and Build
 
 ```bash
-git clone <repository-url>
-cd bedrock-spring-ai-demo
+git clone https://github.com/piotrpawluk/bblt-session1.git
+cd bblt-session1
 mvn clean package
 ```
 
-### 3. Run the Application
+### 4. Run the Application
 
 ```bash
 # Web API mode (default)
 mvn spring-boot:run
 
 # CLI mode
-java -jar target/bedrock-spring-ai-demo-0.0.1-SNAPSHOT.jar -Dbedrock.cli.enabled=true
+java -jar target/session1-app-0.0.1-SNAPSHOT-cli.jar
 
-# Interactive CLI mode
-java -jar target/bedrock-spring-ai-demo-0.0.1-SNAPSHOT.jar -Dbedrock.cli.enabled=true -i
+# Web mode (alternative)
+java -jar target/session1-app-0.0.1-SNAPSHOT-web.jar
 ```
 
 ## 🌐 API Endpoints
